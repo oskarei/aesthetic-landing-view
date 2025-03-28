@@ -1,5 +1,5 @@
 
-import { X } from "lucide-react";
+import { X, MapPin } from "lucide-react";
 import { contactInfo } from "@/config/portfolioConfig";
 import { Button } from "@/components/ui/button";
 
