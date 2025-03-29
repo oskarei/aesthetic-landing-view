@@ -1,15 +1,18 @@
 
 import { useEffect, useState } from "react";
-import { backgroundImages } from "@/config/portfolioConfig";
+import { useHomeContent } from "@/hooks/useHomeContent";
 
 const BackgroundImage = () => {
   const [backgroundImage, setBackgroundImage] = useState<string | null>(null);
+  const { homeContent, loading } = useHomeContent();
 
   useEffect(() => {
-    // Select random background image on component mount
-    const randomIndex = Math.floor(Math.random() * backgroundImages.length);
-    setBackgroundImage(backgroundImages[randomIndex]);
-  }, []);
+    if (homeContent?.background && homeContent.background.length > 0) {
+      // Select random background image from the ones provided in Contentstack
+      const randomIndex = Math.floor(Math.random() * homeContent.background.length);
+      setBackgroundImage(homeContent.background[randomIndex].url);
+    }
+  }, [homeContent]);
 
   if (!backgroundImage) {
     return null;
