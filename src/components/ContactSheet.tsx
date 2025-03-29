@@ -22,6 +22,12 @@ const ContactSheet = ({ isOpen, onClose }: ContactSheetProps) => {
     }
   }, [homeContent]);
 
+  // Create Google Maps link with the location
+  const getGoogleMapsLink = () => {
+    const location = homeContent?.location || contactInfo.location;
+    return `https://maps.google.com/?q=${encodeURIComponent(location)}`;
+  };
+
   return (
     <>
       {/* Backdrop */}
@@ -51,7 +57,7 @@ const ContactSheet = ({ isOpen, onClose }: ContactSheetProps) => {
             <div>
               <h3 className="text-xl font-medium mb-1">{homeContent?.header || contactInfo.name}</h3>
               <a 
-                href={contactInfo.locationUrl}
+                href={getGoogleMapsLink()}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center text-muted-foreground hover:text-primary transition-colors"
