@@ -10,6 +10,13 @@ const HOME_QUERY = gql`
         header
         subheader
         bio
+        backgroundConnection {
+          edges {
+            node {
+              url
+            }
+          }
+        }
       }
     }
   }
@@ -20,6 +27,13 @@ export type HomeContent = {
   header: string;
   subheader: string;
   bio: string;
+  backgroundConnection?: {
+    edges: Array<{
+      node: {
+        url: string;
+      };
+    }>;
+  };
 };
 
 export const useHomeContent = () => {
