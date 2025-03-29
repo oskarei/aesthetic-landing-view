@@ -3,13 +3,10 @@ import { gql, useQuery } from '@apollo/client';
 
 // GraphQL query to fetch the home content type
 const HOME_QUERY = gql`
-  query GetHomeContent {
+  query MyQuery {
     all_home {
       items {
         title
-        system {
-          uid
-        }
       }
     }
   }
@@ -17,9 +14,6 @@ const HOME_QUERY = gql`
 
 export type HomeContent = {
   title: string;
-  system: {
-    uid: string;
-  };
 };
 
 export const useHomeContent = () => {
