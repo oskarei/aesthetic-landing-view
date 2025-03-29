@@ -4,8 +4,7 @@ import { getEntries } from '@/utils/contentstackClient';
 
 interface ContentData {
   title?: string;
-  subheader?: string;
-  bio?: string;
+  description?: string;
   [key: string]: any;
 }
 
@@ -17,8 +16,8 @@ const ContentstackExample = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch content from the 'home' content type
-        const response = await getEntries('home', {
+        // Replace 'content_type_uid' with your actual content type UID
+        const response = await getEntries('content_type_uid', {
           limit: 1,
         });
         
@@ -28,8 +27,8 @@ const ContentstackExample = () => {
           setError('No content found');
         }
       } catch (err) {
-        console.error('Contentstack error:', err);
-        setError('Failed to fetch content from Contentstack');
+        setError('Failed to fetch content');
+        console.error(err);
       } finally {
         setLoading(false);
       }
@@ -45,8 +44,8 @@ const ContentstackExample = () => {
   return (
     <div className="p-4 bg-black/30 backdrop-blur-sm rounded-lg text-white">
       <h3 className="text-xl font-medium mb-2">{data.title || 'Content from Contentstack'}</h3>
-      <p className="text-white/70">{data.subheader || 'Subheader would appear here'}</p>
-      <p className="mt-2 text-white/70">{data.bio || 'Bio would appear here'}</p>
+      <p className="text-white/70">{data.description || 'Content description would appear here'}</p>
+      {/* Render other fields as needed */}
     </div>
   );
 };
