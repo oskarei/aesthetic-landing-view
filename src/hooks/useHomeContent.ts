@@ -10,6 +10,7 @@ const HOME_QUERY = gql`
         header
         subheader
         bio
+        description
         contact_button
         location
         email
@@ -30,6 +31,7 @@ export type HomeContent = {
   header: string;
   subheader: string;
   bio: string;
+  description?: any; // JSON RTE field
   contact_button?: string[];
   location?: string;
   email?: string;

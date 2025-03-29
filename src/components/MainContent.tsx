@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import ContactSheet from "./ContactSheet";
 import { useHomeContent } from "@/hooks/useHomeContent";
+import { render } from "@contentstack/json-rte-serializer";
 
 const MainContent = () => {
   const [isContactOpen, setIsContactOpen] = useState(false);
@@ -21,6 +22,9 @@ const MainContent = () => {
       setContactButtonText(homeContent.contact_button[randomIndex]);
     }
   }, [homeContent]);
+
+  // Convert JSON RTE to HTML
+  const descriptionHtml = homeContent?.description ? render(homeContent.description) : "";
 
   return (
     <div className="relative z-10 min-h-screen flex flex-col">
@@ -46,9 +50,17 @@ const MainContent = () => {
               <h2 className="text-xl md:text-2xl text-white/80 mb-6">
                 {homeContent?.subheader}
               </h2>
-              <p className="text-lg text-white/70 mb-10 max-w-md">
-                {homeContent?.bio}
-              </p>
+              {/* Replace bio text with description HTML */}
+              {descriptionHtml ? (
+                <div 
+                  className="text-lg text-white/70 mb-10 max-w-md prose prose-invert"
+                  dangerouslySetInnerHTML={{ __html: descriptionHtml }}
+                />
+              ) : (
+                <p className="text-lg text-white/70 mb-10 max-w-md">
+                  {homeContent?.bio}
+                </p>
+              )}
               <Button
                 onClick={() => setIsContactOpen(true)}
                 className="bg-white text-black hover:bg-white/90 px-6 py-6 text-lg rounded-full"
