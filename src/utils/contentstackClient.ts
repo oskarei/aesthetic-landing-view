@@ -2,7 +2,7 @@
 import * as Contentstack from 'contentstack';
 
 // Initialize the Contentstack SDK
-const Stack = Contentstack.createStack({
+const Stack = Contentstack.Stack({
   api_key: 'bltaefe95bce3ee136b',
   delivery_token: 'csa457168b52b72939af51b9fd',
   environment: 'production',

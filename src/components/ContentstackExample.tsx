@@ -28,8 +28,8 @@ const ContentstackExample = () => {
           setError('No content found');
         }
       } catch (err) {
-        setError('Failed to fetch content');
-        console.error(err);
+        console.error('Contentstack error:', err);
+        setError('Failed to fetch content from Contentstack');
       } finally {
         setLoading(false);
       }
