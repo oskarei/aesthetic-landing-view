@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import ContactSheet from "./ContactSheet";
 import { useHomeContent } from "@/hooks/useHomeContent";
-import * as ContentstackRTE from "@contentstack/json-rte-serializer";
+import { RenderOption, render } from "@contentstack/json-rte-serializer";
 
 const MainContent = () => {
   const [isContactOpen, setIsContactOpen] = useState(false);
@@ -23,9 +23,9 @@ const MainContent = () => {
     }
   }, [homeContent]);
 
-  // Convert JSON RTE to HTML using the correct method from the library
+  // Convert JSON RTE to HTML using the correct method from the documentation
   const descriptionHtml = homeContent?.description?.json 
-    ? ContentstackRTE.default(homeContent.description.json) 
+    ? render(homeContent.description.json, {}) 
     : "";
 
   return (
