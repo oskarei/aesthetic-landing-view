@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import ContactSheet from "./ContactSheet";
 import { useHomeContent } from "@/hooks/useHomeContent";
-import ContentstackRTESerializer from "@contentstack/json-rte-serializer";
+import * as ContentstackRTESerializer from "@contentstack/json-rte-serializer";
 
 const MainContent = () => {
   const [isContactOpen, setIsContactOpen] = useState(false);
@@ -23,15 +23,20 @@ const MainContent = () => {
     }
   }, [homeContent]);
 
-  // Convert JSON RTE to HTML using the ContentstackRTESerializer
+  // Debug the JSON content received
   console.log("Description JSON:", homeContent?.description?.json);
   
-  // Use the correct method from ContentstackRTESerializer
-  const descriptionHtml = homeContent?.description?.json 
-    ? ContentstackRTESerializer(homeContent.description.json)
-    : "";
-  
-  console.log("HTML output:", descriptionHtml);
+  // Convert JSON RTE to HTML using the RTE Serializer
+  let descriptionHtml = "";
+  if (homeContent?.description?.json) {
+    try {
+      // Import all exports and use the library properly
+      descriptionHtml = ContentstackRTESerializer.render(homeContent.description.json, {});
+      console.log("HTML output:", descriptionHtml);
+    } catch (error) {
+      console.error("Error rendering RTE content:", error);
+    }
+  }
 
   return (
     <div className="relative z-10 min-h-screen flex flex-col">
