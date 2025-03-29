@@ -10,10 +10,6 @@ const HOME_QUERY = gql`
         header
         subheader
         bio
-        description {
-          json
-          # Add any other necessary fields for the rich text editor
-        }
         contact_button
         location
         email
@@ -34,7 +30,6 @@ export type HomeContent = {
   header: string;
   subheader: string;
   bio: string;
-  description?: any; // JSON RTE field
   contact_button?: string[];
   location?: string;
   email?: string;
@@ -54,10 +49,6 @@ export const useHomeContent = () => {
   });
   
   const homeContent: HomeContent | undefined = data?.all_home?.items?.[0];
-  
-  // Adding console logs for debugging
-  console.log("Contentstack data received:", data);
-  console.log("Description field:", homeContent?.description);
   
   return { homeContent, loading, error };
 };
