@@ -1,12 +1,13 @@
+
 import * as Contentstack from 'contentstack';
 
 // Initialize the Contentstack SDK
-const Stack = Contentstack.Stack({
+const Stack = Contentstack.ContentstackClient({
   api_key: 'bltaefe95bce3ee136b',
-  delivery_token: 'csa457168b52b72939af51b9fd', // Replace this with your delivery token
+  delivery_token: 'csa457168b52b72939af51b9fd',
   environment: 'production',
   region: Contentstack.Region.EU
-});
+}).stack();
 
 // Enable live preview if needed
 // Stack.setHost('api.contentstack.io');
