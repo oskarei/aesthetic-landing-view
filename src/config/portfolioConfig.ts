@@ -1,5 +1,5 @@
 
-import { Github, Linkedin, Mail, MapPin, Instagram, Twitter } from "lucide-react";
+import { Github, Linkedin, Mail, MapPin, Instagram, Twitter, Music } from "lucide-react";
 
 export interface SocialLink {
   name: string;
@@ -26,7 +26,7 @@ export const backgroundImages = [
 export const contactInfo: ContactInfo = {
   name: "Oskar Eiriksson",
   location: "Kópavogur, Iceland",
-  email: "your.email@example.com",
+  email: "oskar@oskarei.com",
   locationUrl: "https://maps.google.com/?q=Kópavogur,Iceland",
   socialLinks: [
     {
@@ -48,6 +48,11 @@ export const contactInfo: ContactInfo = {
       name: "X",
       url: "https://x.com/oskarei",
       icon: Twitter
+    },
+    {
+      name: "Last.fm",
+      url: "https://last.fm/user/oskarei",
+      icon: Music
     }
   ]
 };
