@@ -18,8 +18,9 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
 });
 
 // Create the HTTP link to the Contentstack GraphQL endpoint
+// Using EU endpoint as specified
 const httpLink = createHttpLink({
-  uri: `https://graphql.contentstack.com/stacks/${CONTENTSTACK_API_KEY}?environment=${CONTENTSTACK_ENVIRONMENT}`,
+  uri: `https://eu-graphql.contentstack.com/stacks/${CONTENTSTACK_API_KEY}?environment=${CONTENTSTACK_ENVIRONMENT}`,
   headers: {
     access_token: CONTENTSTACK_DELIVERY_TOKEN,
     'Content-Type': 'application/json',
