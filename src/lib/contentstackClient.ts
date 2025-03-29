@@ -29,6 +29,11 @@ const httpLink = createHttpLink({
     access_token: CONTENTSTACK_DELIVERY_TOKEN,
     environment: CONTENTSTACK_ENVIRONMENT,
     'Content-Type': 'application/json',
+  },
+  // Add fetch options to handle CORS
+  fetchOptions: {
+    mode: 'cors',
+    credentials: 'same-origin'
   }
 });
 
