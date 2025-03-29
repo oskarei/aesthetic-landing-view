@@ -2,6 +2,8 @@
 import { X, MapPin } from "lucide-react";
 import { contactInfo } from "@/config/portfolioConfig";
 import { Button } from "@/components/ui/button";
+import { useHomeContent } from "@/hooks/useHomeContent";
+import { useEffect, useState } from "react";
 
 interface ContactSheetProps {
   isOpen: boolean;
@@ -9,6 +11,17 @@ interface ContactSheetProps {
 }
 
 const ContactSheet = ({ isOpen, onClose }: ContactSheetProps) => {
+  const { homeContent } = useHomeContent();
+  const [contactHeading, setContactHeading] = useState("Get in touch");
+
+  // Set random contact heading text from the array if available
+  useEffect(() => {
+    if (homeContent?.contact_button && homeContent.contact_button.length > 0) {
+      const randomIndex = Math.floor(Math.random() * homeContent.contact_button.length);
+      setContactHeading(homeContent.contact_button[randomIndex]);
+    }
+  }, [homeContent]);
+
   return (
     <>
       {/* Backdrop */}
@@ -36,7 +49,7 @@ const ContactSheet = ({ isOpen, onClose }: ContactSheetProps) => {
           
           <div className="space-y-8">
             <div>
-              <h3 className="text-xl font-medium mb-1">{contactInfo.name}</h3>
+              <h3 className="text-xl font-medium mb-1">{homeContent?.header || contactInfo.name}</h3>
               <a 
                 href={contactInfo.locationUrl}
                 target="_blank"
@@ -44,17 +57,17 @@ const ContactSheet = ({ isOpen, onClose }: ContactSheetProps) => {
                 className="flex items-center text-muted-foreground hover:text-primary transition-colors"
               >
                 <MapPin className="h-4 w-4 mr-1" />
-                <span>{contactInfo.location}</span>
+                <span>{homeContent?.location || contactInfo.location}</span>
               </a>
             </div>
             
             <div>
-              <h4 className="text-sm uppercase tracking-wider text-muted-foreground mb-3">Get in touch</h4>
+              <h4 className="text-sm uppercase tracking-wider text-muted-foreground mb-3">{contactHeading}</h4>
               <a 
-                href={`mailto:${contactInfo.email}`} 
+                href={`mailto:${homeContent?.email || contactInfo.email}`} 
                 className="text-primary hover:underline block mb-6"
               >
-                {contactInfo.email}
+                {homeContent?.email || contactInfo.email}
               </a>
               
               <div className="flex space-x-4">

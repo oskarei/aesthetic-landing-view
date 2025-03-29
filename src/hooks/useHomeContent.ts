@@ -11,6 +11,8 @@ const HOME_QUERY = gql`
         subheader
         bio
         contact_button
+        location
+        email
         backgroundConnection {
           edges {
             node {
@@ -29,6 +31,8 @@ export type HomeContent = {
   subheader: string;
   bio: string;
   contact_button?: string[];
+  location?: string;
+  email?: string;
   backgroundConnection?: {
     edges: Array<{
       node: {
