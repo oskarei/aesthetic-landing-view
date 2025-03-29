@@ -1,5 +1,5 @@
 
-import { Github, Linkedin, Mail, MapPin } from "lucide-react";
+import { Github, Linkedin, Mail, MapPin, Instagram, Twitter } from "lucide-react";
 
 export interface SocialLink {
   name: string;
@@ -11,6 +11,7 @@ export interface ContactInfo {
   name: string;
   location: string;
   email: string;
+  locationUrl: string;
   socialLinks: SocialLink[];
 }
 
@@ -23,25 +24,36 @@ export const backgroundImages = [
 ];
 
 export const contactInfo: ContactInfo = {
-  name: "Your Name",
+  name: "Oskar Eiriksson",
   location: "Kópavogur, Iceland",
   email: "your.email@example.com",
+  locationUrl: "https://maps.google.com/?q=Kópavogur,Iceland",
   socialLinks: [
     {
       name: "GitHub",
-      url: "https://github.com/yourusername",
+      url: "https://github.com/oskarei",
       icon: Github
     },
     {
       name: "LinkedIn",
-      url: "https://linkedin.com/in/yourusername",
+      url: "https://linkedin.com/in/oskarei",
       icon: Linkedin
+    },
+    {
+      name: "Instagram",
+      url: "https://instagram.com/oskarei",
+      icon: Instagram
+    },
+    {
+      name: "X",
+      url: "https://x.com/oskarei",
+      icon: Twitter
     }
   ]
 };
 
 export const portfolioContent = {
-  title: "Developer & Designer",
+  title: "Oskar Eiriksson",
   subtitle: "Based in Iceland",
   description: "I build exceptional digital experiences focused on simplicity and functionality."
 };

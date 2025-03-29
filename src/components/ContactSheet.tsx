@@ -37,10 +37,15 @@ const ContactSheet = ({ isOpen, onClose }: ContactSheetProps) => {
           <div className="space-y-8">
             <div>
               <h3 className="text-xl font-medium mb-1">{contactInfo.name}</h3>
-              <div className="flex items-center text-muted-foreground">
+              <a 
+                href={contactInfo.locationUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center text-muted-foreground hover:text-primary transition-colors"
+              >
                 <MapPin className="h-4 w-4 mr-1" />
                 <span>{contactInfo.location}</span>
-              </div>
+              </a>
             </div>
             
             <div>
