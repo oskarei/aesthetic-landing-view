@@ -4,7 +4,7 @@ import { useToast } from '@/components/ui/use-toast';
 
 // GraphQL query to fetch the home content type
 const HOME_QUERY = gql`
-  query MyQuery {
+  query HomeContentQuery {
     all_home {
       items {
         title
@@ -34,7 +34,9 @@ export const useHomeContent = () => {
         variant: "destructive"
       });
     },
-    fetchPolicy: 'network-only', // This ensures we always fetch from the server
+    // In case of error, don't retry indefinitely
+    fetchPolicy: 'network-only',
+    notifyOnNetworkStatusChange: true,
   });
   
   // Use real content if available, otherwise fallback to default

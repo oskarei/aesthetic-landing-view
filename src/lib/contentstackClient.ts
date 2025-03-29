@@ -23,24 +23,27 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
 
 // Create the HTTP link to the Contentstack GraphQL endpoint
 const httpLink = createHttpLink({
-  uri: `https://eu-graphql.contentstack.com/`,
+  uri: `https://graphql.contentstack.com/stacks/${CONTENTSTACK_API_KEY}?environment=${CONTENTSTACK_ENVIRONMENT}`,
   headers: {
-    api_key: CONTENTSTACK_API_KEY,
     access_token: CONTENTSTACK_DELIVERY_TOKEN,
-    environment: CONTENTSTACK_ENVIRONMENT,
     'Content-Type': 'application/json',
   },
-  // Add fetch options to handle CORS
-  fetchOptions: {
-    mode: 'cors',
-    credentials: 'same-origin'
-  }
 });
 
 // Initialize Apollo Client with the combined links
 const client = new ApolloClient({
   link: from([errorLink, httpLink]),
-  cache: new InMemoryCache()
+  cache: new InMemoryCache(),
+  defaultOptions: {
+    watchQuery: {
+      fetchPolicy: 'network-only',
+      errorPolicy: 'all',
+    },
+    query: {
+      fetchPolicy: 'network-only',
+      errorPolicy: 'all',
+    },
+  },
 });
 
 export default client;
