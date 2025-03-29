@@ -55,5 +55,9 @@ export const useHomeContent = () => {
   
   const homeContent: HomeContent | undefined = data?.all_home?.items?.[0];
   
+  // Adding console logs for debugging
+  console.log("Contentstack data received:", data);
+  console.log("Description field:", homeContent?.description);
+  
   return { homeContent, loading, error };
 };

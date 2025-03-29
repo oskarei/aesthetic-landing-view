@@ -23,9 +23,9 @@ const MainContent = () => {
     }
   }, [homeContent]);
 
-  // Convert JSON RTE to HTML using the correct method
-  const descriptionHtml = homeContent?.description 
-    ? ContentstackRTE.serialize(homeContent.description.json) 
+  // Convert JSON RTE to HTML using the correct method from the library
+  const descriptionHtml = homeContent?.description?.json 
+    ? ContentstackRTE.default(homeContent.description.json) 
     : "";
 
   return (
