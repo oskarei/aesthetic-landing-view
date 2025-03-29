@@ -1,18 +1,24 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import ContactSheet from "./ContactSheet";
 import { useHomeContent } from "@/hooks/useHomeContent";
-import { useEffect } from "react";
 
 const MainContent = () => {
   const [isContactOpen, setIsContactOpen] = useState(false);
   const { homeContent, loading } = useHomeContent();
+  const [contactButtonText, setContactButtonText] = useState("Get in Touch");
 
   // Update the page title when content is loaded
   useEffect(() => {
     if (homeContent?.title) {
       document.title = homeContent.title;
+    }
+    
+    // Set random contact button text from the array if available
+    if (homeContent?.contact_button && homeContent.contact_button.length > 0) {
+      const randomIndex = Math.floor(Math.random() * homeContent.contact_button.length);
+      setContactButtonText(homeContent.contact_button[randomIndex]);
     }
   }, [homeContent]);
 
@@ -47,7 +53,7 @@ const MainContent = () => {
                 onClick={() => setIsContactOpen(true)}
                 className="bg-white text-black hover:bg-white/90 px-6 py-6 text-lg rounded-full"
               >
-                Get in Touch
+                {contactButtonText}
               </Button>
             </>
           )}
