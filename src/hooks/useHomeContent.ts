@@ -10,7 +10,10 @@ const HOME_QUERY = gql`
         header
         subheader
         bio
-        description
+        description {
+          json
+          # Add any other necessary fields for the rich text editor
+        }
         contact_button
         location
         email
