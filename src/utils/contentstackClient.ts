@@ -4,7 +4,7 @@ import * as Contentstack from 'contentstack';
 // Initialize the Contentstack SDK
 const Stack = Contentstack.Stack({
   api_key: 'bltaefe95bce3ee136b',
-  delivery_token: 'cs07f595d08450634e254ade48', // Replace this with your delivery token
+  delivery_token: 'csa457168b52b72939af51b9fd', // Replace this with your delivery token
   environment: 'production',
   region: Contentstack.Region.EU
 });
@@ -24,7 +24,7 @@ export const getEntries = async (contentType: string, query?: any) => {
     if (query) {
       if (query.where) {
         Object.entries(query.where).forEach(([key, value]) => {
-          Query.where(key, value);
+          Query.where(key, value as string | number | boolean);
         });
       }
       
