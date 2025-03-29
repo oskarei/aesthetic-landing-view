@@ -17,7 +17,12 @@ export type HomeContent = {
 };
 
 export const useHomeContent = () => {
-  const { data, loading, error } = useQuery(HOME_QUERY);
+  const { data, loading, error } = useQuery(HOME_QUERY, {
+    onError: (error) => {
+      console.error('Error fetching home content:', error);
+    },
+    fetchPolicy: 'network-only', // This ensures we always fetch from the server
+  });
   
   const homeContent: HomeContent | null = data?.all_home?.items?.[0] || null;
   
