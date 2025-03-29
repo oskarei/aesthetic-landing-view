@@ -3,7 +3,6 @@ import { useState } from "react";
 import { portfolioContent } from "@/config/portfolioConfig";
 import { Button } from "@/components/ui/button";
 import ContactSheet from "./ContactSheet";
-import ThemeToggle from "./ThemeToggle";
 
 const MainContent = () => {
   const [isContactOpen, setIsContactOpen] = useState(false);
@@ -12,7 +11,7 @@ const MainContent = () => {
     <div className="relative z-10 min-h-screen flex flex-col">
       {/* Header */}
       <header className="p-6 flex justify-end">
-        <ThemeToggle />
+        {/* ThemeToggle removed */}
       </header>
 
       {/* Main content */}

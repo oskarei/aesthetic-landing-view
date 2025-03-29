@@ -1,4 +1,3 @@
-
 import { Github, Linkedin, Mail, MapPin, Instagram, Twitter, Music } from "lucide-react";
 
 export interface SocialLink {
@@ -59,6 +58,6 @@ export const contactInfo: ContactInfo = {
 
 export const portfolioContent = {
   title: "Oskar Eiriksson",
-  subtitle: "Based in Iceland",
-  description: "I build exceptional digital experiences focused on simplicity and functionality."
+  subtitle: "Software Engineer / Solution Architect",
+  description: "A geek, family man, espresso drinker, football fan, and (sometimes) a very precise guy. Working as a Solution Architect Manager at Contentstack."
 };
