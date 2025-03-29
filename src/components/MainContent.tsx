@@ -3,6 +3,7 @@ import { useState } from "react";
 import { portfolioContent } from "@/config/portfolioConfig";
 import { Button } from "@/components/ui/button";
 import ContactSheet from "./ContactSheet";
+import Footer from "./Footer";
 
 const MainContent = () => {
   const [isContactOpen, setIsContactOpen] = useState(false);
@@ -34,6 +35,9 @@ const MainContent = () => {
           </Button>
         </div>
       </main>
+
+      {/* Footer */}
+      <Footer />
 
       {/* Contact Sheet */}
       <ContactSheet 
