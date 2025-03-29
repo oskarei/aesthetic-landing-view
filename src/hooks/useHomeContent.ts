@@ -7,6 +7,9 @@ const HOME_QUERY = gql`
     all_home {
       items {
         title
+        header
+        subheader
+        bio
       }
     }
   }
@@ -14,6 +17,9 @@ const HOME_QUERY = gql`
 
 export type HomeContent = {
   title: string;
+  header: string;
+  subheader: string;
+  bio: string;
 };
 
 export const useHomeContent = () => {

@@ -1,12 +1,20 @@
 
 import { useState } from "react";
-import { portfolioContent } from "@/config/portfolioConfig";
 import { Button } from "@/components/ui/button";
 import ContactSheet from "./ContactSheet";
-import Footer from "./Footer";
+import { useHomeContent } from "@/hooks/useHomeContent";
+import { useEffect } from "react";
 
 const MainContent = () => {
   const [isContactOpen, setIsContactOpen] = useState(false);
+  const { homeContent, loading } = useHomeContent();
+
+  // Update the page title when content is loaded
+  useEffect(() => {
+    if (homeContent?.title) {
+      document.title = homeContent.title;
+    }
+  }, [homeContent]);
 
   return (
     <div className="relative z-10 min-h-screen flex flex-col">
@@ -18,26 +26,33 @@ const MainContent = () => {
       {/* Main content */}
       <main className="flex-1 flex items-center px-6 md:px-12 lg:px-24">
         <div className="max-w-xl">
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-4 leading-tight">
-            {portfolioContent.title}
-          </h1>
-          <h2 className="text-xl md:text-2xl text-white/80 mb-6">
-            {portfolioContent.subtitle}
-          </h2>
-          <p className="text-lg text-white/70 mb-10 max-w-md">
-            {portfolioContent.description}
-          </p>
-          <Button
-            onClick={() => setIsContactOpen(true)}
-            className="bg-white text-black hover:bg-white/90 px-6 py-6 text-lg rounded-full"
-          >
-            Get in Touch
-          </Button>
+          {loading ? (
+            <div className="animate-pulse space-y-4">
+              <div className="h-10 bg-white/20 rounded w-3/4"></div>
+              <div className="h-6 bg-white/20 rounded w-1/2"></div>
+              <div className="h-24 bg-white/20 rounded w-full"></div>
+            </div>
+          ) : (
+            <>
+              <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-4 leading-tight">
+                {homeContent?.header}
+              </h1>
+              <h2 className="text-xl md:text-2xl text-white/80 mb-6">
+                {homeContent?.subheader}
+              </h2>
+              <p className="text-lg text-white/70 mb-10 max-w-md">
+                {homeContent?.bio}
+              </p>
+              <Button
+                onClick={() => setIsContactOpen(true)}
+                className="bg-white text-black hover:bg-white/90 px-6 py-6 text-lg rounded-full"
+              >
+                Get in Touch
+              </Button>
+            </>
+          )}
         </div>
       </main>
-
-      {/* Footer */}
-      <Footer />
 
       {/* Contact Sheet */}
       <ContactSheet 
