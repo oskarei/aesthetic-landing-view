@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from "react";
 import ContactSheet from "./ContactSheet";
 import { useHomeContent } from "@/hooks/useHomeContent";
@@ -27,6 +28,14 @@ const MainContent = () => {
     threshold: 0.2,
     rootMargin: "-100px 0px",
   });
+
+  const setContactButtonRef = (element: HTMLDivElement | null) => {
+    contactButtonRef.current = element;
+    
+    if (typeof contactButtonInViewRef === 'function') {
+      contactButtonInViewRef(element);
+    }
+  };
 
   useEffect(() => {
     if (homeContent?.title) {
