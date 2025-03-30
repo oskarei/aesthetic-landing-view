@@ -21,6 +21,12 @@ const MainContent = () => {
     triggerOnce: false,
   });
 
+  // New observer for determining when to show gallery
+  const { ref: heroExitRef, inView: heroIsVisible } = useInView({
+    threshold: 0.1, // Lower threshold to trigger earlier
+    rootMargin: "-100px 0px", // Negative margin to trigger when fully out of view
+  });
+
   // Update the page title and collect background images when content is loaded
   useEffect(() => {
     if (homeContent?.title) {
@@ -45,6 +51,9 @@ const MainContent = () => {
     setBackgroundVisible(heroInView);
   }, [heroInView]);
 
+  // Determine if gallery should be visible
+  const shouldShowGallery = !heroIsVisible;
+
   return (
     <div className="relative z-10 min-h-screen flex flex-col">
       {/* Header */}
@@ -57,7 +66,13 @@ const MainContent = () => {
         <div className="flex flex-col">
           {/* Hero section */}
           <section 
-            ref={heroRef}
+            ref={(node) => {
+              // Apply both refs to the same element
+              if (node) {
+                heroRef(node);
+                heroExitRef(node);
+              }
+            }}
             className="min-h-screen flex items-center px-6 md:px-12 lg:px-24 transition-opacity duration-500"
           >
             <div className="max-w-xl">
@@ -89,8 +104,12 @@ const MainContent = () => {
             </div>
           </section>
 
-          {/* Background Gallery Section */}
-          <section className="min-h-screen bg-black/80 px-6 md:px-12 lg:px-24 py-20">
+          {/* Background Gallery Section - hidden until hero scrolls out of view */}
+          <section 
+            className={`min-h-screen bg-black/80 px-6 md:px-12 lg:px-24 py-20 transition-opacity duration-500 ${
+              shouldShowGallery ? 'opacity-100' : 'opacity-0 pointer-events-none'
+            }`}
+          >
             <h2 className="text-4xl font-bold text-white mb-12 text-center">Background Gallery</h2>
             
             {/* Image Carousel with navigation buttons */}
