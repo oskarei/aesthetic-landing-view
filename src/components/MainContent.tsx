@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import ContactSheet from "./ContactSheet";
@@ -114,18 +115,20 @@ const MainContent = () => {
                 <p className="text-lg text-white/70 mb-10 max-w-md">
                   {homeContent?.bio}
                 </p>
-                <div className="flex flex-col items-center">
+                <div className="flex flex-col items-start">
                   <Button
                     onClick={() => setIsContactOpen(true)}
                     className="bg-white text-black hover:bg-white/90 px-6 py-6 text-lg rounded-full mb-10"
                   >
                     {contactButtonText}
                   </Button>
-                  <ArrowDown 
-                    className="animate-bounce text-white" 
-                    size={32}
-                    strokeWidth={2.5}
-                  />
+                  <div className="flex justify-center w-full">
+                    <ArrowDown 
+                      className="animate-bounce text-white" 
+                      size={32}
+                      strokeWidth={2.5}
+                    />
+                  </div>
                 </div>
               </div>
             )}
