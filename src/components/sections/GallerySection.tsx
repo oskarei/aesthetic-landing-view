@@ -3,6 +3,7 @@ import React, { forwardRef, useEffect, useState } from "react";
 import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from "@/components/ui/carousel";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import WorkInProgress from "@/components/WorkInProgress";
 
 interface GallerySectionProps {
   backgroundImages: Array<{url: string, description?: string}>;
@@ -115,22 +116,9 @@ const GallerySection = forwardRef<HTMLElement, GallerySectionProps>(({
 
       <div className="max-w-3xl mx-auto text-gray-800">
         <h3 className="text-3xl font-bold mb-6 text-gray-900">My Journey</h3>
-        <p className="mb-4 text-lg">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, diam quis aliquam tincidunt, 
-          nisl nunc fermentum nunc, vitae aliquet nunc nisl eu nunc. Sed euismod, diam quis aliquam tincidunt,
-          nisl nunc fermentum nunc, vitae aliquet nunc nisl eu nunc.
-        </p>
-        <p className="mb-4 text-lg">
-          Proin eget tortor risus. Curabitur non nulla sit amet nisl tempus convallis quis ac lectus. 
-          Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus. Nulla quis lorem ut libero 
-          malesuada feugiat. Nulla porttitor accumsan tincidunt.
-        </p>
-        <p className="mb-4 text-lg">
-          Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui. Cras ultricies ligula sed 
-          magna dictum porta. Curabitur aliquet quam id dui posuere blandit. Vestibulum ante ipsum primis 
-          in faucibus orci luctus et ultrices posuere cubilia Curae; Donec velit neque, auctor sit amet 
-          aliquam vel, ullamcorper sit amet ligula.
-        </p>
+        <div className="flex justify-center items-center mb-8">
+          <WorkInProgress />
+        </div>
       </div>
     </section>
   );
