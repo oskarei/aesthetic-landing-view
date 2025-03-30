@@ -8,6 +8,7 @@ const BackgroundImage = () => {
   const { homeContent, loading } = useHomeContent();
   const [prevScrollPos, setPrevScrollPos] = useState(0);
   const [contentBackgroundUrls, setContentBackgroundUrls] = useState<string[]>([]);
+  const [hasScrolledBelowHero, setHasScrolledBelowHero] = useState(false);
 
   // Get all background URLs from the content
   useEffect(() => {
@@ -40,19 +41,32 @@ const BackgroundImage = () => {
     }
   };
 
-  // Add scroll event listener to change background when scrolling back to top
+  // Add scroll event listener to change background only when returning to hero from below
   useEffect(() => {
+    const heroSectionHeight = window.innerHeight; // Approximate hero section height
+    
     const handleScroll = () => {
       const currentScrollPos = window.scrollY;
       
-      // If we're scrolling up and within the top section of the page
-      if (prevScrollPos > currentScrollPos && currentScrollPos < 200) {
-        // Only change if we've scrolled a significant amount and now going back up
-        if (prevScrollPos - currentScrollPos > 50) {
-          const imagesToUse = contentBackgroundUrls.length ? contentBackgroundUrls : backgroundImages;
-          selectRandomBackground(imagesToUse);
-          console.log("Changing background - scroll position:", currentScrollPos, "prev:", prevScrollPos);
-        }
+      // Detect if user has scrolled below hero section
+      if (currentScrollPos > heroSectionHeight) {
+        setHasScrolledBelowHero(true);
+      }
+      
+      // Only change background if:
+      // 1. Previously scrolled below hero section
+      // 2. Now scrolled back up into hero section
+      // 3. Coming from a position significantly below
+      if (
+        hasScrolledBelowHero && 
+        currentScrollPos < heroSectionHeight * 0.5 && 
+        prevScrollPos > currentScrollPos && 
+        prevScrollPos - currentScrollPos > 50
+      ) {
+        const imagesToUse = contentBackgroundUrls.length ? contentBackgroundUrls : backgroundImages;
+        selectRandomBackground(imagesToUse);
+        setHasScrolledBelowHero(false); // Reset the flag
+        console.log("Changing background - returning to hero from below");
       }
       
       setPrevScrollPos(currentScrollPos);
@@ -65,9 +79,9 @@ const BackgroundImage = () => {
     // Clean up
     return () => {
       document.removeEventListener('scroll', handleScroll);
-      window.addEventListener('scroll', handleScroll);
+      window.removeEventListener('scroll', handleScroll);
     };
-  }, [prevScrollPos, contentBackgroundUrls, backgroundImage]); // Add backgroundImage as a dependency
+  }, [prevScrollPos, contentBackgroundUrls, backgroundImage, hasScrolledBelowHero]); 
 
   if (!backgroundImage) {
     return null;
