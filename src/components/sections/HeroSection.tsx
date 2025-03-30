@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useInView } from "react-intersection-observer";
 import { ArrowDown } from "lucide-react";
 import { HomeContent } from "@/hooks/useHomeContent";
+import { jsonToHtml } from "@contentstack/json-rte-serializer";
 
 interface HeroSectionProps {
   loading: boolean;
@@ -29,6 +30,7 @@ const HeroSection = ({
   
   const rootRef = useRef<HTMLElement | null>(null);
   const [isRotated, setIsRotated] = useState(false);
+  const [rteHtml, setRteHtml] = useState<string>("");
   
   useEffect(() => {
     rootRef.current = document.getElementById('root');
@@ -39,6 +41,19 @@ const HeroSection = ({
       setIsRotated(false);
     }
   }, []);
+  
+  useEffect(() => {
+    if (homeContent?.description?.json) {
+      try {
+        // Convert json to html using jsonToHtml function
+        const html = jsonToHtml(homeContent.description.json);
+        setRteHtml(html);
+      } catch (error) {
+        console.error("Error parsing RTE content:", error);
+        setRteHtml("<p>Error rendering content</p>");
+      }
+    }
+  }, [homeContent?.description?.json]);
   
   const triggerEasterEgg = (e: React.MouseEvent) => {
     // Get the clicked element text content
@@ -110,9 +125,15 @@ const HeroSection = ({
           <h2 className="text-xl md:text-2xl text-white/80 mb-6">
             {homeContent?.subheader}
           </h2>
-          <p className="text-lg text-white/70 mb-10 max-w-md">
-            {homeContent?.bio}
-          </p>
+          <div className="text-lg text-white/70 mb-10 max-w-md rich-text-content">
+            {rteHtml ? (
+              <div dangerouslySetInnerHTML={{ __html: rteHtml }} />
+            ) : (
+              homeContent?.description && (
+                <p>Loading description...</p>
+              )
+            )}
+          </div>
           <div className="flex flex-col items-start">
             <div ref={contactButtonRef}>
               <Button
