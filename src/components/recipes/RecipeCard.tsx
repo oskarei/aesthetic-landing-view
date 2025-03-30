@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card, CardContent, CardHeader, CardFooter } from "@/components/ui/card";
 import { Recipe } from '@/types/recipe';
@@ -40,7 +41,7 @@ const RecipeCard: React.FC<RecipeCardProps> = ({ recipe }) => {
       <CardHeader className="pb-0">
         <div className="flex justify-between items-start mb-3">
           <h2 className="text-2xl font-bold">
-            <Link to={`/matur/${recipe.slug}`} className="hover:text-primary transition-colors">
+            <Link to={recipe.id} className="hover:text-primary transition-colors">
               {recipe.title}
             </Link>
           </h2>
