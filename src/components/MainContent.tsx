@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import ContactSheet from "./ContactSheet";
@@ -7,7 +6,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from "@/components/ui/carousel";
 import { Card, CardContent } from "@/components/ui/card";
 import { useInView } from "react-intersection-observer";
-import { ArrowDown } from "lucide-react";
+import { ArrowBigDown } from "lucide-react";
 
 const MainContent = () => {
   const [isContactOpen, setIsContactOpen] = useState(false);
@@ -76,7 +75,7 @@ const MainContent = () => {
             }}
             className="min-h-screen flex items-center px-6 md:px-12 lg:px-24 transition-opacity duration-500 relative"
           >
-            <div className="max-w-xl">
+            <div className="max-w-xl flex flex-col items-start">
               {loading ? (
                 <div className="animate-pulse space-y-4">
                   <div className="h-10 bg-white/20 rounded w-3/4"></div>
@@ -94,24 +93,21 @@ const MainContent = () => {
                   <p className="text-lg text-white/70 mb-10 max-w-md">
                     {homeContent?.bio}
                   </p>
-                  <Button
-                    onClick={() => setIsContactOpen(true)}
-                    className="bg-white text-black hover:bg-white/90 px-6 py-6 text-lg rounded-full"
-                  >
-                    {contactButtonText}
-                  </Button>
+                  <div className="flex flex-col items-center">
+                    <Button
+                      onClick={() => setIsContactOpen(true)}
+                      className="bg-white text-black hover:bg-white/90 px-6 py-6 text-lg rounded-full mb-6"
+                    >
+                      {contactButtonText}
+                    </Button>
+                    <ArrowBigDown 
+                      className="animate-bounce text-white" 
+                      size={46}
+                      strokeWidth={2}
+                    />
+                  </div>
                 </>
               )}
-            </div>
-            
-            {/* Scroll down arrow */}
-            <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2 flex flex-col items-center">
-              <span className="text-white/80 text-sm mb-2">Scroll for more</span>
-              <ArrowDown 
-                className="animate-bounce text-white" 
-                size={32}
-                strokeWidth={2.5}
-              />
             </div>
           </section>
 
