@@ -12,6 +12,7 @@ const BackgroundImage = () => {
   const [scrollDirection, setScrollDirection] = useState<'up' | 'down' | null>(null);
   const prevScrollPosRef = useRef<number>(0);
   const [isInGallerySection, setIsInGallerySection] = useState(false);
+  const [isInAboutSection, setIsInAboutSection] = useState(false);
 
   // Get all background URLs from the content
   useEffect(() => {
@@ -48,33 +49,42 @@ const BackgroundImage = () => {
     }
   };
 
-  // Check if we're in the gallery section based on scroll position
+  // Check if we're in the gallery or about section based on scroll position
   useEffect(() => {
-    const checkIfInGallerySection = () => {
-      // Use a combination of scroll position and viewport height to determine
-      // if we're in the gallery section
+    const checkVisibleSections = () => {
+      // Check for gallery section
       const gallerySection = document.querySelector('[data-gallery-section]');
-      
       if (gallerySection) {
-        const rect = gallerySection.getBoundingClientRect();
-        // Consider in gallery section when at least 50% of it is visible
-        // This is more strict than before to ensure we're properly in the gallery section
-        const isInGallery = rect.top < window.innerHeight * 0.5;
+        const galleryRect = gallerySection.getBoundingClientRect();
+        const isInGallery = galleryRect.top < window.innerHeight * 0.5;
         setIsInGallerySection(isInGallery);
-        console.log("Is in gallery section:", isInGallery, "Gallery top position:", rect.top, "Threshold:", window.innerHeight * 0.5);
+      }
+      
+      // Check for about section
+      const aboutSection = document.querySelector('[data-about-section]');
+      if (aboutSection) {
+        const aboutRect = aboutSection.getBoundingClientRect();
+        const isInAbout = aboutRect.top < window.innerHeight * 0.5;
+        setIsInAboutSection(isInAbout);
+        
+        // If entering about section, change the background
+        if (isInAbout && !isInAboutSection) {
+          const imagesToUse = contentBackgroundUrls.length ? contentBackgroundUrls : backgroundImages;
+          selectNextBackground(imagesToUse);
+        }
       }
     };
 
     // Check initially
-    checkIfInGallerySection();
+    checkVisibleSections();
     
     // Use passive listener for better performance
-    window.addEventListener('scroll', checkIfInGallerySection, { passive: true });
+    window.addEventListener('scroll', checkVisibleSections, { passive: true });
     
     return () => {
-      window.removeEventListener('scroll', checkIfInGallerySection);
+      window.removeEventListener('scroll', checkVisibleSections);
     };
-  }, []);
+  }, [contentBackgroundUrls, isInAboutSection]);
 
   // Add scroll event listener to change background on scroll direction change
   useEffect(() => {
@@ -82,7 +92,7 @@ const BackgroundImage = () => {
     
     const handleScroll = () => {
       // Only process if we're deep enough in the gallery section
-      if (!isInGallerySection) {
+      if (!isInGallerySection && !isInAboutSection) {
         return;
       }
       
@@ -102,7 +112,7 @@ const BackgroundImage = () => {
         if (imagesToUse.length > 1) {
           selectNextBackground(imagesToUse);
           lastChangeTimeRef.current = currentTime;
-          console.log("Background changed on scroll direction change to up in gallery section");
+          console.log("Background changed on scroll direction change to up");
         }
       }
       
@@ -113,13 +123,11 @@ const BackgroundImage = () => {
     // Use passive event listener for better performance
     window.addEventListener('scroll', handleScroll, { passive: true });
     
-    console.log("New scroll event handler attached, gallery-aware");
-    
     // Clean up
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [contentBackgroundUrls, scrollDirection, isInGallerySection]); 
+  }, [contentBackgroundUrls, scrollDirection, isInGallerySection, isInAboutSection]); 
 
   if (!backgroundImage) {
     return null;

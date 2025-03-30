@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from "react";
 import ContactSheet from "./ContactSheet";
 import { useHomeContent } from "@/hooks/useHomeContent";
@@ -7,6 +6,7 @@ import { useInView } from "react-intersection-observer";
 import LightboxDialog from "./LightboxDialog";
 import HeroSection from "./sections/HeroSection";
 import GallerySection from "./sections/GallerySection";
+import AboutSection from "./sections/AboutSection";
 import HamburgerMenu from "./HamburgerMenu";
 
 const MainContent = () => {
@@ -23,6 +23,7 @@ const MainContent = () => {
   
   const contactButtonRef = useRef<HTMLDivElement>(null);
   const galleryRef = useRef<HTMLElement>(null);
+  const aboutRef = useRef<HTMLElement>(null);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   
   const { ref: contactButtonInViewRef, inView: contactButtonInView } = useInView({
@@ -30,11 +31,24 @@ const MainContent = () => {
     rootMargin: "-100px 0px",
   });
 
+  const { ref: galleryInViewRef, inView: galleryInView } = useInView({
+    threshold: 0.3,
+    rootMargin: "-50px 0px",
+  });
+
   const setContactButtonRef = (element: HTMLDivElement | null) => {
     contactButtonRef.current = element;
     
     if (typeof contactButtonInViewRef === 'function') {
       contactButtonInViewRef(element);
+    }
+  };
+
+  const setGalleryRef = (element: HTMLElement | null) => {
+    galleryRef.current = element;
+    
+    if (typeof galleryInViewRef === 'function') {
+      galleryInViewRef(element);
     }
   };
 
@@ -68,6 +82,7 @@ const MainContent = () => {
   }, [contactButtonInView]);
 
   const shouldShowGallery = !contactButtonInView;
+  const shouldShowAbout = !galleryInView && !contactButtonInView;
 
   const scrollToGallery = () => {
     if (galleryRef.current) {
@@ -103,6 +118,34 @@ const MainContent = () => {
     }
   };
 
+  const scrollToAbout = () => {
+    if (aboutRef.current) {
+      console.log("Scrolling to about section at position:", aboutRef.current.offsetTop);
+      
+      if (scrollAreaRef.current) {
+        const viewportElement = scrollAreaRef.current.querySelector('[data-radix-scroll-area-viewport]');
+        if (viewportElement) {
+          (viewportElement as HTMLElement).scrollTo({
+            top: aboutRef.current.offsetTop,
+            behavior: 'smooth'
+          });
+        } else {
+          scrollAreaRef.current.scrollTo({
+            top: aboutRef.current.offsetTop,
+            behavior: 'smooth'
+          });
+        }
+      }
+      
+      window.scrollTo({
+        top: aboutRef.current.offsetTop,
+        behavior: 'smooth'
+      });
+    } else {
+      console.log("About ref is null");
+    }
+  };
+
   const openLightbox = (imageUrl: string, caption?: string) => {
     setCurrentImage(imageUrl);
     setCurrentCaption(caption || null);
@@ -132,8 +175,7 @@ const MainContent = () => {
   return (
     <div className="relative z-10 min-h-screen flex flex-col">
       <header className="p-6 flex justify-end sticky top-0 z-20">
-        {/* HamburgerMenu added here */}
-        <HamburgerMenu />
+        <HamburgerMenu scrollToGallery={scrollToGallery} scrollToAbout={scrollToAbout} />
       </header>
 
       <ScrollArea 
@@ -152,7 +194,7 @@ const MainContent = () => {
           />
 
           <GallerySection
-            ref={galleryRef}
+            ref={setGalleryRef}
             backgroundImages={backgroundImages}
             loadingStates={loadingStates}
             handleImageLoaded={handleImageLoaded}
@@ -162,6 +204,13 @@ const MainContent = () => {
             sectionHeadline={homeContent?.background_section_headline}
             backgroundInfo={homeContent?.background_info}
             title={homeContent?.title}
+          />
+
+          <AboutSection
+            ref={aboutRef}
+            shouldShowAbout={shouldShowAbout}
+            title="About Me"
+            aboutInfo={homeContent?.bio}
           />
         </div>
       </ScrollArea>

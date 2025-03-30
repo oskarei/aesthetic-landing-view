@@ -35,7 +35,12 @@ const NavItem = ({ label, onClick, active }: NavItemProps) => {
   );
 };
 
-const HamburgerMenu = () => {
+interface HamburgerMenuProps {
+  scrollToGallery: () => void;
+  scrollToAbout: () => void;
+}
+
+const HamburgerMenu = ({ scrollToGallery, scrollToAbout }: HamburgerMenuProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
@@ -65,13 +70,6 @@ const HamburgerMenu = () => {
         document.body.removeChild(overlay);
       }, 300);
     }, 200);
-  };
-
-  const scrollToGallery = () => {
-    const gallerySection = document.querySelector('[data-gallery-section]');
-    if (gallerySection) {
-      gallerySection.scrollIntoView({ behavior: 'smooth' });
-    }
   };
 
   const goToTop = () => {
@@ -122,6 +120,11 @@ const HamburgerMenu = () => {
                 <NavItem 
                   label="Gallery" 
                   onClick={() => handleNavigation(scrollToGallery)}
+                  active={false}
+                />
+                <NavItem 
+                  label="About" 
+                  onClick={() => handleNavigation(scrollToAbout)}
                   active={false}
                 />
               </motion.ul>
