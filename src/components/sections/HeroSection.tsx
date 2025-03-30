@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useInView } from "react-intersection-observer";
 import { ArrowDown } from "lucide-react";
 import { HomeContent } from "@/hooks/useHomeContent";
+import ContentStackRte from "@contentstack/json-rte-serializer";
 
 interface HeroSectionProps {
   loading: boolean;
@@ -110,9 +111,15 @@ const HeroSection = ({
           <h2 className="text-xl md:text-2xl text-white/80 mb-6">
             {homeContent?.subheader}
           </h2>
-          <p className="text-lg text-white/70 mb-10 max-w-md">
-            {homeContent?.bio}
-          </p>
+          <div className="text-lg text-white/70 mb-10 max-w-md rich-text-content">
+            {homeContent?.description?.json && (
+              <div dangerouslySetInnerHTML={{ 
+                __html: new ContentStackRte.JSONToHTML({ 
+                  json: homeContent.description.json 
+                }).parse() 
+              }} />
+            )}
+          </div>
           <div className="flex flex-col items-start">
             <div ref={contactButtonRef}>
               <Button
