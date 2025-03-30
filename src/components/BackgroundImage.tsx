@@ -1,5 +1,5 @@
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { backgroundImages } from "@/config/portfolioConfig";
 import { useHomeContent } from "@/hooks/useHomeContent";
 
@@ -9,6 +9,8 @@ const BackgroundImage = () => {
   const [prevScrollPos, setPrevScrollPos] = useState(0);
   const [contentBackgroundUrls, setContentBackgroundUrls] = useState<string[]>([]);
   const [hasScrolledBelowHero, setHasScrolledBelowHero] = useState(false);
+  const changeTimeoutRef = useRef<number | null>(null);
+  const lastChangeTimeRef = useRef<number>(0);
 
   // Get all background URLs from the content
   useEffect(() => {
@@ -44,29 +46,44 @@ const BackgroundImage = () => {
   // Add scroll event listener to change background only when returning to hero from below
   useEffect(() => {
     const heroSectionHeight = window.innerHeight; // Approximate hero section height
+    const CHANGE_COOLDOWN = 1000; // 1 second cooldown between background changes
     
     const handleScroll = () => {
       const currentScrollPos = window.scrollY;
+      const currentTime = Date.now();
       
       // Detect if user has scrolled below hero section
-      if (currentScrollPos > heroSectionHeight) {
+      if (currentScrollPos > heroSectionHeight * 0.8) {
         setHasScrolledBelowHero(true);
+      }
+      
+      // Clear any pending timeout to prevent multiple rapid changes
+      if (changeTimeoutRef.current) {
+        window.clearTimeout(changeTimeoutRef.current);
+        changeTimeoutRef.current = null;
       }
       
       // Only change background if:
       // 1. Previously scrolled below hero section
-      // 2. Now scrolled back up into hero section
+      // 2. Now scrolled back up into hero section (top third)
       // 3. Coming from a position significantly below
+      // 4. We haven't changed the background recently (cooldown)
       if (
         hasScrolledBelowHero && 
-        currentScrollPos < heroSectionHeight * 0.5 && 
+        currentScrollPos < heroSectionHeight * 0.3 && 
         prevScrollPos > currentScrollPos && 
-        prevScrollPos - currentScrollPos > 50
+        prevScrollPos - currentScrollPos > 80 &&
+        currentTime - lastChangeTimeRef.current > CHANGE_COOLDOWN
       ) {
-        const imagesToUse = contentBackgroundUrls.length ? contentBackgroundUrls : backgroundImages;
-        selectRandomBackground(imagesToUse);
-        setHasScrolledBelowHero(false); // Reset the flag
-        console.log("Changing background - returning to hero from below");
+        // Use a timeout to debounce the change and make sure scrolling has stabilized
+        changeTimeoutRef.current = window.setTimeout(() => {
+          const imagesToUse = contentBackgroundUrls.length ? contentBackgroundUrls : backgroundImages;
+          selectRandomBackground(imagesToUse);
+          setHasScrolledBelowHero(false); // Reset the flag
+          lastChangeTimeRef.current = Date.now();
+          console.log("Changing background - returning to hero from below");
+          changeTimeoutRef.current = null;
+        }, 200);
       }
       
       setPrevScrollPos(currentScrollPos);
@@ -78,6 +95,9 @@ const BackgroundImage = () => {
     
     // Clean up
     return () => {
+      if (changeTimeoutRef.current) {
+        window.clearTimeout(changeTimeoutRef.current);
+      }
       document.removeEventListener('scroll', handleScroll);
       window.removeEventListener('scroll', handleScroll);
     };
