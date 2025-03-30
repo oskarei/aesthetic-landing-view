@@ -89,7 +89,7 @@ const HeroSection = ({
       ) : (
         <div className="w-full max-w-4xl">
           <h1 
-            className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-4 leading-tight cursor-pointer"
+            className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-4 leading-tight"
             onClick={triggerEasterEgg}
           >
             {homeContent?.header}
