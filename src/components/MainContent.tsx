@@ -92,7 +92,7 @@ const MainContent = () => {
             shouldShowGallery={shouldShowGallery}
             sectionHeadline={homeContent?.background_section_headline}
             backgroundInfo={homeContent?.background_info}
-            title={homeContent?.title}
+            scrollToAbout={scrollToAbout}
           />
 
           <AboutSection

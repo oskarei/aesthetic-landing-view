@@ -3,7 +3,7 @@ import React, { forwardRef, useEffect, useState } from "react";
 import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from "@/components/ui/carousel";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import WorkInProgress from "@/components/WorkInProgress";
+import { ArrowDown } from "lucide-react";
 
 interface GallerySectionProps {
   backgroundImages: Array<{url: string, description?: string}>;
@@ -14,7 +14,7 @@ interface GallerySectionProps {
   shouldShowGallery: boolean;
   sectionHeadline?: string;
   backgroundInfo?: string;
-  title?: string;
+  scrollToAbout: () => void;
 }
 
 const GallerySection = forwardRef<HTMLElement, GallerySectionProps>(({
@@ -26,7 +26,7 @@ const GallerySection = forwardRef<HTMLElement, GallerySectionProps>(({
   shouldShowGallery,
   sectionHeadline = "Background Gallery",
   backgroundInfo,
-  title
+  scrollToAbout
 }, ref) => {
   // Add state to hold shuffled images
   const [shuffledImages, setShuffledImages] = useState<Array<{url: string, description?: string}>>([]);
@@ -50,7 +50,7 @@ const GallerySection = forwardRef<HTMLElement, GallerySectionProps>(({
     <section 
       ref={ref}
       data-gallery-section
-      className={`min-h-screen bg-white px-6 md:px-12 lg:px-24 py-20 transition-opacity duration-500 ${
+      className={`min-h-screen bg-white px-6 md:px-12 lg:px-24 py-20 transition-opacity duration-500 flex flex-col ${
         shouldShowGallery ? 'opacity-100' : 'opacity-0 pointer-events-none'
       }`}
     >
@@ -117,11 +117,22 @@ const GallerySection = forwardRef<HTMLElement, GallerySectionProps>(({
         </Carousel>
       </div>
 
-      <div className="max-w-3xl mx-auto text-gray-800">
-        <h3 className="text-3xl font-bold mb-6 text-gray-900">{title || "My Journey"}</h3>
-        <div className="flex justify-center items-center mb-8">
-          <WorkInProgress />
-        </div>
+      <div className="flex justify-center items-center mt-auto mb-10">
+        <button 
+          onClick={(e) => {
+            e.preventDefault();
+            console.log("Arrow clicked in Gallery, scrolling to About section");
+            scrollToAbout();
+          }}
+          className="bg-transparent border-none cursor-pointer transition-transform hover:translate-y-1 focus:outline-none p-5"
+          aria-label="Scroll to about section"
+        >
+          <ArrowDown 
+            className="animate-bounce text-black" 
+            size={32}
+            strokeWidth={2.5}
+          />
+        </button>
       </div>
     </section>
   );
