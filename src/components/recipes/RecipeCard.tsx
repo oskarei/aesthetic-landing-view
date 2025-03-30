@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Card, CardContent, CardHeader, CardFooter } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Recipe } from '@/types/recipe';
 import { Calendar, User } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
@@ -70,15 +70,6 @@ const RecipeCard: React.FC<RecipeCardProps> = ({ recipe }) => {
           <p className="font-medium">{getTextPreview(recipe.body, 100)}</p>
         </div>
       </CardContent>
-      <CardFooter className="pt-2">
-        <div className="w-full h-[200px] bg-gray-100 rounded-md flex items-center justify-center overflow-hidden">
-          <img 
-            src={recipe.image} 
-            alt={recipe.title} 
-            className="w-full h-full object-cover"
-          />
-        </div>
-      </CardFooter>
     </Card>
   );
 };
