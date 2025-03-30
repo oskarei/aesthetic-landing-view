@@ -1,7 +1,8 @@
 
-import React, { forwardRef } from "react";
+import React, { forwardRef, useEffect, useState } from "react";
 import WorkInProgress from "@/components/WorkInProgress";
 import { motion } from "framer-motion";
+import ContentstackJsonRteSerializer from "@contentstack/json-rte-serializer";
 
 interface AboutSectionProps {
   title?: string;
@@ -18,6 +19,23 @@ const AboutSection = forwardRef<HTMLElement, AboutSectionProps>(({
   about_the_site,
   shouldShowAbout,
 }, ref) => {
+  const [rteHtml, setRteHtml] = useState<string>("");
+  
+  useEffect(() => {
+    if (about_the_site?.json) {
+      try {
+        // Initialize the serializer
+        const jsonRteSerializer = new ContentstackJsonRteSerializer();
+        // Convert json to html
+        const html = jsonRteSerializer.toHTML(about_the_site.json);
+        setRteHtml(html);
+      } catch (error) {
+        console.error("Error parsing RTE content:", error);
+        setRteHtml("<p>Error rendering content</p>");
+      }
+    }
+  }, [about_the_site]);
+
   return (
     <section 
       ref={ref}
@@ -42,10 +60,10 @@ const AboutSection = forwardRef<HTMLElement, AboutSectionProps>(({
           transition={{ duration: 0.6, delay: 0.4 }}
           className="mb-12 text-left"
         >
-          {about_the_site ? (
+          {about_the_site && rteHtml ? (
             <div 
               className="text-lg rich-text-content" 
-              dangerouslySetInnerHTML={{ __html: about_the_site.json.toString() }}
+              dangerouslySetInnerHTML={{ __html: rteHtml }}
             />
           ) : (
             <p className="text-lg">
