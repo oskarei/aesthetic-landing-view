@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from "react";
 import ContactSheet from "./ContactSheet";
 import { useHomeContent } from "@/hooks/useHomeContent";
@@ -91,9 +92,11 @@ const MainContent = () => {
   }, [homeContent]);
 
   useEffect(() => {
+    // Only hide the background when we're fully in the gallery section and not in hero or about
     setBackgroundVisible(!galleryInView || contactButtonInView || aboutInView);
   }, [contactButtonInView, galleryInView, aboutInView]);
 
+  // Determine visibility states with more emphasis on clear section boundaries
   const shouldShowGallery = !contactButtonInView;
   const shouldShowAbout = !galleryInView && !contactButtonInView;
 
