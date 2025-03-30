@@ -33,7 +33,7 @@ const GallerySection = ({
       <h2 className="text-4xl font-bold text-gray-900 mb-6 text-center">{sectionHeadline}</h2>
       
       {backgroundInfo && (
-        <div className="max-w-3xl mx-auto mb-12 text-gray-700">
+        <div className="max-w-3xl mx-auto mb-12 text-center text-gray-700">
           <p className="text-lg">{backgroundInfo}</p>
         </div>
       )}
