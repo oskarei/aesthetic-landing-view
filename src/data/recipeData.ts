@@ -1,5 +1,5 @@
-
 import { Recipe } from '@/types/recipe';
+import { createRecipeSlug } from '@/lib/slugify';
 
 // Generate random dates within the last 6 months
 const getRandomDate = () => {
@@ -39,7 +39,8 @@ export const mockRecipes: Recipe[] = [
       
       Berið fram með soðnum kartöflum og ferskri salat.
     `,
-    image: "/placeholder.svg"
+    image: "/placeholder.svg",
+    slug: "islenski-lambakjot-med-rosmarin"
   },
   {
     id: "2",
@@ -209,6 +210,13 @@ export const mockRecipes: Recipe[] = [
   }
 ];
 
+// Add slugs to all recipes
+mockRecipes.forEach(recipe => {
+  if (!recipe.slug) {
+    recipe.slug = createRecipeSlug(recipe.title);
+  }
+});
+
 // Simulate API call with a delay
 export const getRecipes = (): Promise<Recipe[]> => {
   return new Promise((resolve) => {
@@ -220,14 +228,13 @@ export const getRecipes = (): Promise<Recipe[]> => {
 
 // Get more recipes for infinite scrolling (simulated pagination)
 export const getMoreRecipes = (page: number): Promise<Recipe[]> => {
-  // In a real app, this would fetch from an API with pagination
-  // Here we just return the same recipes with different IDs to simulate more content
   return new Promise((resolve) => {
     setTimeout(() => {
       const moreRecipes = mockRecipes.map(recipe => ({
         ...recipe,
         id: `${recipe.id}-page-${page}`,
         title: `${recipe.title} (${page})`,
+        slug: `${recipe.slug}-page-${page}`
       }));
       resolve(moreRecipes.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()));
     }, 500);

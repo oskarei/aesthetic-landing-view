@@ -9,6 +9,7 @@ import contentstackClient from "./lib/contentstackClient";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import RecipesPage from "./pages/Recipes";
+import RecipeDetail from "./pages/RecipeDetail";
 
 const queryClient = new QueryClient();
 
@@ -22,6 +23,7 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/matur" element={<RecipesPage />} />
+            <Route path="/matur/:slug" element={<RecipeDetail />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

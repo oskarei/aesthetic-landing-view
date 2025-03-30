@@ -1,10 +1,11 @@
-
 import React from 'react';
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Recipe } from '@/types/recipe';
 import { Calendar, User } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { format } from 'date-fns';
+import { Link } from 'react-router-dom';
+import { createRecipeSlug } from '@/lib/slugify';
 
 interface RecipeCardProps {
   recipe: Recipe;
@@ -12,12 +13,17 @@ interface RecipeCardProps {
 
 const RecipeCard: React.FC<RecipeCardProps> = ({ recipe }) => {
   const formattedDate = format(new Date(recipe.date), 'MMMM d, yyyy');
+  const recipeSlug = recipe.slug || createRecipeSlug(recipe.title);
   
   return (
     <Card className="mb-8 overflow-hidden hover:shadow-lg transition-shadow">
       <CardHeader className="pb-0">
         <div className="flex justify-between items-start mb-3">
-          <h2 className="text-2xl font-bold">{recipe.title}</h2>
+          <h2 className="text-2xl font-bold">
+            <Link to={`/matur/${recipeSlug}`} className="hover:text-primary transition-colors">
+              {recipe.title}
+            </Link>
+          </h2>
         </div>
         <p className="text-muted-foreground text-lg italic mb-2">{recipe.tagline}</p>
         <div className="flex flex-wrap gap-2 mt-2 mb-4">
