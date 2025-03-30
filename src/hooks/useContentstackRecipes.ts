@@ -16,23 +16,10 @@ export const RECIPES_QUERY = gql`
           json
         }
         url
+        image {
+          url
+        }
       }
-    }
-  }
-`;
-
-// Query for a single recipe by url
-export const RECIPE_BY_URL_QUERY = gql`
-  query RecipeByUrlQuery($url: String!) {
-    recipe(url: $url, locale: "is-is") {
-      title
-      tagline
-      author
-      date
-      body {
-        json
-      }
-      url
     }
   }
 `;
@@ -46,9 +33,10 @@ const transformRecipe = (item: any): Recipe => {
     author: item.author || 'Ótilgreindur höfundur',
     date: item.date || new Date().toISOString(),
     body: item.body?.json ? JSON.stringify(item.body.json) : '',
-    taxonomy: [], // Empty array since we're skipping taxonomy for now
-    image: '/placeholder.svg', // Using placeholder as image field was not in the schema
-    slug: createRecipeSlug(item.title)
+    taxonomy: [], // Empty array since taxonomy field isn't available
+    image: item.image?.url || '/placeholder.svg',
+    slug: createRecipeSlug(item.title),
+    url: item.url
   };
 };
 
@@ -82,15 +70,4 @@ export const useContentstackRecipes = (skip: number = 0, limit: number = 5) => {
   const hasMore = data?.all_recipe?.items.length >= limit;
 
   return { recipes, loading, error, loadMore, hasMore };
-};
-
-export const useContentstackRecipeByUrl = (url: string) => {
-  const { data, loading, error } = useQuery(RECIPE_BY_URL_QUERY, {
-    variables: { url },
-    skip: !url
-  });
-  
-  const recipe = data?.recipe ? transformRecipe(data.recipe) : null;
-  
-  return { recipe, loading, error };
 };
