@@ -1,6 +1,7 @@
 
 import React, { forwardRef } from "react";
 import WorkInProgress from "@/components/WorkInProgress";
+import { motion } from "framer-motion";
 
 interface AboutSectionProps {
   title?: string;
@@ -22,9 +23,21 @@ const AboutSection = forwardRef<HTMLElement, AboutSectionProps>(({
       }`}
     >
       <div className="relative z-10 text-white">
-        <h2 className="text-4xl font-bold mb-6 text-left">{title}</h2>
+        <motion.h2 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: shouldShowAbout ? 1 : 0, y: shouldShowAbout ? 0 : 20 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="text-4xl font-bold mb-6 text-left"
+        >
+          {title}
+        </motion.h2>
         
-        <div className="mb-12 text-left">
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: shouldShowAbout ? 1 : 0, y: shouldShowAbout ? 0 : 30 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+          className="mb-12 text-left"
+        >
           <p className="text-lg">
             {aboutInfo || `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, urna eu tincidunt consectetur, 
             nisl nunc euismod nisi, eu porttitor nisl nisl euismod nisi. Sed euismod, urna eu tincidunt consectetur,
@@ -34,11 +47,16 @@ const AboutSection = forwardRef<HTMLElement, AboutSectionProps>(({
             Sed euismod, urna eu tincidunt consectetur, nisl nunc euismod nisi, eu porttitor nisl nisl euismod nisi.
             Sed euismod, urna eu tincidunt consectetur, nisl nunc euismod nisi, eu porttitor nisl nisl euismod nisi.
           </p>
-        </div>
+        </motion.div>
         
-        <div className="flex justify-start items-center mb-8">
+        <motion.div 
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: shouldShowAbout ? 1 : 0, y: shouldShowAbout ? 0 : 40 }}
+          transition={{ duration: 0.6, delay: 0.6 }}
+          className="flex justify-start items-center mb-8"
+        >
           <WorkInProgress />
-        </div>
+        </motion.div>
       </div>
     </section>
   );

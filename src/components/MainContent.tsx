@@ -27,17 +27,17 @@ const MainContent = () => {
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   
   const { ref: contactButtonInViewRef, inView: contactButtonInView } = useInView({
-    threshold: 0.2,
+    threshold: 0.3,
     rootMargin: "-100px 0px",
   });
 
   const { ref: galleryInViewRef, inView: galleryInView } = useInView({
-    threshold: 0.7,
+    threshold: 0.8,
     rootMargin: "-50px 0px",
   });
 
   const { ref: aboutInViewRef, inView: aboutInView } = useInView({
-    threshold: 0.5,
+    threshold: 0.6,
     rootMargin: "-50px 0px",
   });
 
@@ -91,15 +91,12 @@ const MainContent = () => {
   }, [homeContent]);
 
   useEffect(() => {
-    // Only hide the background when fully in the gallery section
-    // Show background in hero and about sections
     const isFullyInGallery = galleryInView && !contactButtonInView && !aboutInView;
     setBackgroundVisible(!isFullyInGallery);
   }, [contactButtonInView, galleryInView, aboutInView]);
 
-  // Determine visibility states with more emphasis on clear section boundaries
-  const shouldShowGallery = !contactButtonInView;
-  const shouldShowAbout = aboutInView || !galleryInView && !contactButtonInView;
+  const shouldShowGallery = galleryInView || (!contactButtonInView && !aboutInView);
+  const shouldShowAbout = aboutInView || (!galleryInView && !contactButtonInView);
 
   const scrollToGallery = () => {
     if (galleryRef.current) {

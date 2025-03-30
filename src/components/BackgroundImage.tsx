@@ -14,9 +14,10 @@ const BackgroundImage = () => {
   const [isInGallerySection, setIsInGallerySection] = useState(false);
   const [isInAboutSection, setIsInAboutSection] = useState(false);
   const [isInHeroSection, setIsInHeroSection] = useState(true);
-  const significantScrollThreshold = 150; // Increased threshold for more stability
+  const significantScrollThreshold = 200; // Increased threshold for more stability
   const lastScrollPositionRef = useRef<number>(0);
-  const sectionTransitionThreshold = 0.9; // 90% of section must be scrolled before transition
+  const sectionTransitionThreshold = 0.95; // 95% of section must be scrolled before transition (increased from 90%)
+  const CHANGE_COOLDOWN = 3000; // Increased cooldown between background changes to 3 seconds
 
   // Get all background URLs from the content
   useEffect(() => {
@@ -53,42 +54,48 @@ const BackgroundImage = () => {
     }
   };
 
-  // Check if we're in the gallery or about section based on scroll position
+  // Check if we're in the gallery or about section based on scroll position with improved accuracy
   useEffect(() => {
     const checkVisibleSections = () => {
-      // Check for hero section
+      // Check for hero section - improved detection
       const heroSection = document.querySelector('section:first-child');
       if (heroSection) {
         const heroRect = heroSection.getBoundingClientRect();
-        // Only consider fully out of hero when it's completely out of view (bottom <= 0)
-        const isInHero = heroRect.bottom > 0;
+        // Only consider out of hero when it's completely out of view (bottom <= 10% of viewport)
+        const isInHero = heroRect.bottom > window.innerHeight * 0.1;
         setIsInHeroSection(isInHero);
       }
       
-      // Check for gallery section
+      // Check for gallery section - improved detection
       const gallerySection = document.querySelector('[data-gallery-section]');
       if (gallerySection) {
         const galleryRect = gallerySection.getBoundingClientRect();
-        // Consider in gallery only when it's fully visible (top < 10% of viewport)
-        const isInGallery = galleryRect.top < window.innerHeight * 0.1 && galleryRect.bottom > 0;
+        // Consider in gallery only when it's almost fully visible (top < 5% of viewport and bottom still visible)
+        const isInGallery = galleryRect.top < window.innerHeight * 0.05 && galleryRect.bottom > 0;
         setIsInGallerySection(isInGallery);
       }
       
-      // Check for about section
+      // Check for about section - improved detection
       const aboutSection = document.querySelector('[data-about-section]');
       if (aboutSection) {
         const aboutRect = aboutSection.getBoundingClientRect();
-        // Consider in about only when it's fully visible (top < 10% of viewport)
-        const isInAbout = aboutRect.top < window.innerHeight * 0.1;
+        // Consider in about only when it's almost fully visible (top < 5% of viewport)
+        const isInAbout = aboutRect.top < window.innerHeight * 0.05;
         
         // Only update state when there's a real change (entering or leaving the section)
         if (isInAbout !== isInAboutSection) {
           setIsInAboutSection(isInAbout);
           
-          // If entering about section and coming from gallery (not hero), change the background
+          // If entering about section from gallery (not hero), change the background
+          // but only when we've fully transitioned (not partially scrolled)
           if (isInAbout && !isInAboutSection && isInGallerySection && !isInHeroSection) {
-            const imagesToUse = contentBackgroundUrls.length ? contentBackgroundUrls : backgroundImages;
-            selectNextBackground(imagesToUse);
+            const currentTime = Date.now();
+            // Only change if cooldown has elapsed
+            if (currentTime - lastChangeTimeRef.current > CHANGE_COOLDOWN) {
+              const imagesToUse = contentBackgroundUrls.length ? contentBackgroundUrls : backgroundImages;
+              selectNextBackground(imagesToUse);
+              lastChangeTimeRef.current = currentTime;
+            }
           }
         }
       }
@@ -105,10 +112,8 @@ const BackgroundImage = () => {
     };
   }, [contentBackgroundUrls, isInAboutSection, isInGallerySection, isInHeroSection]);
 
-  // Add scroll event listener to change background on scroll direction change with significant movement
+  // Handle background changes on significant scroll with improved accuracy and section transitions
   useEffect(() => {
-    const CHANGE_COOLDOWN = 2000; // longer cooldown between background changes in ms
-    
     const handleScroll = () => {
       // Only process if we're in hero or about section
       if (isInGallerySection && !isInHeroSection && !isInAboutSection) {
@@ -122,10 +127,15 @@ const BackgroundImage = () => {
       // Calculate scroll distance
       const scrollDistance = Math.abs(currentScrollPos - lastScrollPositionRef.current);
       
+      // Only process significant scrolls
+      if (scrollDistance < significantScrollThreshold) {
+        return;
+      }
+      
       // Determine scroll direction
       const currentDirection = currentScrollPos < prevScrollPosRef.current ? 'up' : 'down';
       
-      // Check if we've transitioned between sections completely
+      // Check section transitions with improved accuracy
       const heroSection = document.querySelector('section:first-child');
       const gallerySection = document.querySelector('[data-gallery-section]');
       const aboutSection = document.querySelector('[data-about-section]');
@@ -136,12 +146,12 @@ const BackgroundImage = () => {
         const heroBottom = heroSection.getBoundingClientRect().bottom;
         const galleryTop = gallerySection.getBoundingClientRect().top;
         
-        // Check if we're transitioning from hero to gallery (hero almost gone, gallery coming in)
+        // Check if we're transitioning from hero to gallery (hero almost completely gone, gallery coming in)
         if (currentDirection === 'down' && 
             heroBottom < window.innerHeight * (1 - sectionTransitionThreshold) && 
-            galleryTop < window.innerHeight * sectionTransitionThreshold) {
+            galleryTop < window.innerHeight * 0.1) {
           transitioningBetweenSections = true;
-          console.log("Transitioning from hero to gallery");
+          console.log("Transitioning from hero to gallery - complete transition");
         }
       }
       
@@ -149,39 +159,48 @@ const BackgroundImage = () => {
         const galleryBottom = gallerySection.getBoundingClientRect().bottom;
         const aboutTop = aboutSection.getBoundingClientRect().top;
         
-        // Check if we're transitioning from gallery to about (gallery almost gone, about coming in)
+        // Check if we're transitioning from gallery to about (gallery almost completely gone, about coming in)
         if (currentDirection === 'down' && 
             galleryBottom < window.innerHeight * (1 - sectionTransitionThreshold) && 
-            aboutTop < window.innerHeight * sectionTransitionThreshold) {
+            aboutTop < window.innerHeight * 0.1) {
           transitioningBetweenSections = true;
-          console.log("Transitioning from gallery to about");
+          console.log("Transitioning from gallery to about - complete transition");
         }
       }
       
-      // Only update direction state when there's a significant scroll
-      if (scrollDistance > significantScrollThreshold) {
-        // Update previous scroll position only on significant scrolls
-        prevScrollPosRef.current = currentScrollPos;
+      // Also check transition from about to gallery when scrolling up
+      if (aboutSection && gallerySection) {
+        const aboutBottom = aboutSection.getBoundingClientRect().top;
+        const galleryBottom = gallerySection.getBoundingClientRect().bottom;
         
-        // If direction changed and we're scrolling with cooldown complete
-        // or we're transitioning between sections completely
-        if ((isCooldownComplete && 
-             ((currentDirection === 'up' && scrollDirection === 'down') || 
-              (currentDirection === 'down' && scrollDirection === 'up'))) ||
-            (isCooldownComplete && transitioningBetweenSections)) {
-          
-          const imagesToUse = contentBackgroundUrls.length ? contentBackgroundUrls : backgroundImages;
-          if (imagesToUse.length > 1) {
-            selectNextBackground(imagesToUse);
-            lastChangeTimeRef.current = currentTime;
-            console.log(`Background changed: ${transitioningBetweenSections ? 'section transition' : 'direction change'}, distance: ${scrollDistance}px`);
-          }
+        if (currentDirection === 'up' && 
+            aboutBottom > window.innerHeight * sectionTransitionThreshold && 
+            galleryBottom > window.innerHeight * 0.1) {
+          transitioningBetweenSections = true;
+          console.log("Transitioning from about to gallery - scrolling up");
         }
-        
-        // Update scroll direction only if there's a significant change
-        setScrollDirection(currentDirection);
-        lastScrollPositionRef.current = currentScrollPos;
       }
+      
+      // Update previous scroll position on significant scrolls
+      prevScrollPosRef.current = currentScrollPos;
+      
+      // Change background only on complete section transitions or significant direction changes
+      if (isCooldownComplete && 
+          (transitioningBetweenSections || 
+           ((currentDirection === 'up' && scrollDirection === 'down') || 
+            (currentDirection === 'down' && scrollDirection === 'up')))) {
+        
+        const imagesToUse = contentBackgroundUrls.length ? contentBackgroundUrls : backgroundImages;
+        if (imagesToUse.length > 1) {
+          selectNextBackground(imagesToUse);
+          lastChangeTimeRef.current = currentTime;
+          console.log(`Background changed: ${transitioningBetweenSections ? 'section transition complete' : 'direction change'}, distance: ${scrollDistance}px`);
+        }
+      }
+      
+      // Update scroll direction only if there's a significant change
+      setScrollDirection(currentDirection);
+      lastScrollPositionRef.current = currentScrollPos;
     };
 
     // Use passive event listener for better performance
