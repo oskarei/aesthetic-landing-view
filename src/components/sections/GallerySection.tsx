@@ -14,6 +14,7 @@ interface GallerySectionProps {
   shouldShowGallery: boolean;
   sectionHeadline?: string;
   backgroundInfo?: string;
+  title?: string;
 }
 
 const GallerySection = forwardRef<HTMLElement, GallerySectionProps>(({
@@ -24,7 +25,8 @@ const GallerySection = forwardRef<HTMLElement, GallerySectionProps>(({
   getThumbnailUrl,
   shouldShowGallery,
   sectionHeadline = "Background Gallery",
-  backgroundInfo
+  backgroundInfo,
+  title
 }, ref) => {
   // Add state to hold shuffled images
   const [shuffledImages, setShuffledImages] = useState<Array<{url: string, description?: string}>>([]);
@@ -115,7 +117,7 @@ const GallerySection = forwardRef<HTMLElement, GallerySectionProps>(({
       </div>
 
       <div className="max-w-3xl mx-auto text-gray-800">
-        <h3 className="text-3xl font-bold mb-6 text-gray-900">My Journey</h3>
+        <h3 className="text-3xl font-bold mb-6 text-gray-900">{title || "My Journey"}</h3>
         <div className="flex justify-center items-center mb-8">
           <WorkInProgress />
         </div>
