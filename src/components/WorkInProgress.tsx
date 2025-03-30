@@ -22,11 +22,11 @@ const WorkInProgress = () => {
             .text {
               font-family: 'Press Start 2P', monospace;
               font-size: 14px;
-              fill: #00ffcc;
+              fill: #00997a; /* Darker teal color */
               animation:
                 bounce 1s infinite ease-in-out,
                 flicker 2s infinite steps(1, end);
-              filter: drop-shadow(0 0 4px #00ffcc);
+              filter: drop-shadow(0 0 5px #008068); /* Darker shadow with slightly larger spread */
             }
 
             @keyframes bounce {
