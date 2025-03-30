@@ -43,10 +43,10 @@ const RecipeDetail = () => {
     try {
       const contentJson = JSON.parse(bodyContent);
       const htmlContent = jsonToHtml(contentJson);
-      return <div className="prose max-w-none" dangerouslySetInnerHTML={{ __html: htmlContent }} />;
+      return <div className="prose prose-lg max-w-none rich-text-content" dangerouslySetInnerHTML={{ __html: htmlContent }} />;
     } catch (e) {
       return (
-        <div className="prose max-w-none">
+        <div className="prose prose-lg max-w-none rich-text-content">
           {bodyContent.split('\n\n').map((paragraph, idx) => (
             <p key={idx}>{paragraph}</p>
           ))}

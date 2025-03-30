@@ -131,4 +131,37 @@ body {
   .rich-text-content ul ul li {
     @apply before:bg-gray-400 before:h-1.5 before:w-1.5 before:top-3;
   }
+
+  /* Add styling for the prose class for bullet lists */
+  .prose ul {
+    @apply list-disc pl-6 my-4 space-y-2;
+  }
+  
+  .prose ol {
+    @apply list-decimal pl-6 my-4 space-y-2;
+  }
+  
+  .prose li {
+    @apply mb-1;
+  }
+  
+  .prose li > ul,
+  .prose li > ol {
+    @apply my-1 ml-4;
+  }
+
+  /* Nested lists styling in prose */
+  .prose ul ul {
+    @apply list-circle;
+  }
+  
+  .prose ol ol {
+    @apply list-[lower-alpha];
+  }
+  
+  .prose ul ol,
+  .prose ol ul {
+    @apply my-1 ml-4;
+  }
 }
+
