@@ -72,10 +72,16 @@ const MainContent = () => {
   const scrollToGallery = () => {
     if (galleryRef.current && scrollAreaRef.current) {
       const scrollTop = galleryRef.current.offsetTop;
+      console.log("Scrolling to gallery at position:", scrollTop);
       
       scrollAreaRef.current.scrollTo({
         top: scrollTop,
         behavior: 'smooth'
+      });
+    } else {
+      console.log("Gallery ref or scrollArea ref is null:", { 
+        galleryRef: !!galleryRef.current, 
+        scrollAreaRef: !!scrollAreaRef.current 
       });
     }
   };
@@ -112,7 +118,10 @@ const MainContent = () => {
         {/* ThemeToggle removed */}
       </header>
 
-      <ScrollArea ref={scrollAreaRef} className="flex-1 h-[calc(100vh-4rem)]">
+      <ScrollArea 
+        ref={scrollAreaRef} 
+        className="flex-1 h-[calc(100vh-4rem)]"
+      >
         <div className="flex flex-col">
           <HeroSection 
             loading={loading}
