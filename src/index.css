@@ -105,7 +105,7 @@ body {
   }
   
   .rich-text-content li {
-    @apply relative pl-6 before:absolute before:left-0 before:top-2.5 before:h-2 before:w-2 before:rounded-full before:bg-purple-500 before:content-[''];
+    @apply relative pl-6 before:absolute before:left-0 before:top-2.5 before:h-2 before:w-2 before:rounded-full before:bg-gray-500 before:content-[''];
   }
   
   /* Nested lists styling */
@@ -114,11 +114,6 @@ body {
   }
   
   .rich-text-content ul ul li {
-    @apply before:bg-purple-400 before:h-1.5 before:w-1.5 before:top-3;
-  }
-  
-  /* Add hover effect */
-  .rich-text-content li:hover {
-    @apply text-purple-600 dark:text-purple-400 transition-colors duration-200;
+    @apply before:bg-gray-400 before:h-1.5 before:w-1.5 before:top-3;
   }
 }
