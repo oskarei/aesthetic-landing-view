@@ -11,32 +11,38 @@ const BackgroundImage = () => {
   const [hasScrolledBelowHero, setHasScrolledBelowHero] = useState(false);
   const changeTimeoutRef = useRef<number | null>(null);
   const lastChangeTimeRef = useRef<number>(0);
+  const backgroundIndexRef = useRef<number>(0);
 
   // Get all background URLs from the content
   useEffect(() => {
     if (homeContent?.backgroundConnection?.edges?.length) {
       const urls = homeContent.backgroundConnection.edges.map(edge => edge.node.url);
       setContentBackgroundUrls(urls);
-      selectRandomBackground(urls);
+      selectInitialBackground(urls);
     } else if (!loading && backgroundImages.length) {
       // Fallback to config backgrounds if no content backgrounds are available
-      selectRandomBackground(backgroundImages);
+      selectInitialBackground(backgroundImages);
     }
   }, [homeContent, loading]);
 
-  // Function to select a random background image that's different from the current one
-  const selectRandomBackground = (images: string[]) => {
+  // Function to select initial background image
+  const selectInitialBackground = (images: string[]) => {
+    if (images.length > 0) {
+      const initialIndex = Math.floor(Math.random() * images.length);
+      backgroundIndexRef.current = initialIndex;
+      setBackgroundImage(images[initialIndex]);
+      console.log("Initial background set to index:", initialIndex);
+    }
+  };
+
+  // Function to select the next background image in sequence
+  const selectNextBackground = (images: string[]) => {
     if (images.length > 1) {
-      let newIndex;
-      const currentImage = backgroundImage;
-      
-      // Make sure we select a different image than the current one
-      do {
-        newIndex = Math.floor(Math.random() * images.length);
-      } while (images[newIndex] === currentImage && images.length > 1);
-      
-      setBackgroundImage(images[newIndex]);
-      console.log("Background changed to index:", newIndex);
+      // Move to next image in the array
+      const nextIndex = (backgroundIndexRef.current + 1) % images.length;
+      backgroundIndexRef.current = nextIndex;
+      setBackgroundImage(images[nextIndex]);
+      console.log("Background changed to index:", nextIndex);
     } else if (images.length === 1) {
       setBackgroundImage(images[0]);
       console.log("Only one background image available");
@@ -72,18 +78,18 @@ const BackgroundImage = () => {
         hasScrolledBelowHero && 
         currentScrollPos < heroSectionHeight * 0.3 && 
         prevScrollPos > currentScrollPos && 
-        prevScrollPos - currentScrollPos > 50 && // Reduced threshold to make it easier to trigger
+        prevScrollPos - currentScrollPos > 30 && // Further reduced threshold
         currentTime - lastChangeTimeRef.current > CHANGE_COOLDOWN
       ) {
         // Use a timeout to debounce the change and make sure scrolling has stabilized
         changeTimeoutRef.current = window.setTimeout(() => {
           const imagesToUse = contentBackgroundUrls.length ? contentBackgroundUrls : backgroundImages;
-          selectRandomBackground(imagesToUse);
+          selectNextBackground(imagesToUse); // Use sequential rotation instead of random
           setHasScrolledBelowHero(false); // Reset the flag
           lastChangeTimeRef.current = Date.now();
           console.log("Changing background - returning to hero from below");
           changeTimeoutRef.current = null;
-        }, 100); // Reduced timeout to make it more responsive
+        }, 50); // Further reduced timeout for more immediate response
       }
       
       setPrevScrollPos(currentScrollPos);
@@ -101,7 +107,7 @@ const BackgroundImage = () => {
       document.removeEventListener('scroll', handleScroll);
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [prevScrollPos, contentBackgroundUrls, backgroundImage, hasScrolledBelowHero]); 
+  }, [prevScrollPos, contentBackgroundUrls, hasScrolledBelowHero]); 
 
   if (!backgroundImage) {
     return null;
