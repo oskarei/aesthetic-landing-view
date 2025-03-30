@@ -1,8 +1,7 @@
-
 import React, { forwardRef, useEffect, useState } from "react";
 import WorkInProgress from "@/components/WorkInProgress";
 import { motion } from "framer-motion";
-import { Serializer } from "@contentstack/json-rte-serializer";
+import { jsonToHtml } from "@contentstack/json-rte-serializer";
 
 interface AboutSectionProps {
   title?: string;
@@ -24,10 +23,8 @@ const AboutSection = forwardRef<HTMLElement, AboutSectionProps>(({
   useEffect(() => {
     if (about_the_site?.json) {
       try {
-        // Initialize the serializer
-        const jsonRteSerializer = new Serializer();
-        // Convert json to html
-        const html = jsonRteSerializer.toHTML(about_the_site.json);
+        // Convert json to html using jsonToHtml function
+        const html = jsonToHtml(about_the_site.json);
         setRteHtml(html);
       } catch (error) {
         console.error("Error parsing RTE content:", error);
