@@ -15,6 +15,9 @@ const HOME_QUERY = gql`
         email
         background_section_headline
         background_info
+        about_the_site {
+          json
+        }
         backgroundConnection {
           edges {
             node {
@@ -38,6 +41,9 @@ export type HomeContent = {
   email?: string;
   background_section_headline?: string;
   background_info?: string;
+  about_the_site?: {
+    json: any;
+  };
   backgroundConnection?: {
     edges: Array<{
       node: {
