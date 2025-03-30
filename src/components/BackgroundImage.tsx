@@ -26,11 +26,13 @@ const BackgroundImage = () => {
     if (images.length) {
       const randomIndex = Math.floor(Math.random() * images.length);
       setBackgroundImage(images[randomIndex]);
+      console.log("Images shuffled:", randomIndex);
     }
   };
 
   // Add scroll event listener to change background when scrolling back to top
   useEffect(() => {
+    // We need to listen to the scroll event on the document
     const handleScroll = () => {
       const currentScrollPos = window.scrollY;
       
@@ -47,8 +49,11 @@ const BackgroundImage = () => {
       setPrevScrollPos(currentScrollPos);
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    // Add the event listener to the document
+    document.addEventListener('scroll', handleScroll, { passive: true });
+    
+    // Clean up
+    return () => document.removeEventListener('scroll', handleScroll);
   }, [prevScrollPos, contentBackgroundUrls]);
 
   if (!backgroundImage) {

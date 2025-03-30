@@ -137,6 +137,7 @@ const MainContent = () => {
       <ScrollArea 
         ref={scrollAreaRef} 
         className="flex-1 h-[calc(100vh-4rem)]"
+        data-scroll-container
       >
         <div className="flex flex-col">
           <HeroSection 
