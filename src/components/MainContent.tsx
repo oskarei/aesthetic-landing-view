@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from "react";
 import ContactSheet from "./ContactSheet";
 import { useHomeContent } from "@/hooks/useHomeContent";
@@ -32,6 +33,11 @@ const MainContent = () => {
   });
 
   const { ref: galleryInViewRef, inView: galleryInView } = useInView({
+    threshold: 0.3,
+    rootMargin: "-50px 0px",
+  });
+
+  const { ref: aboutInViewRef, inView: aboutInView } = useInView({
     threshold: 0.3,
     rootMargin: "-50px 0px",
   });
@@ -78,8 +84,9 @@ const MainContent = () => {
   }, [homeContent]);
 
   useEffect(() => {
-    setBackgroundVisible(contactButtonInView);
-  }, [contactButtonInView]);
+    // Hide background in gallery, show in hero and about sections
+    setBackgroundVisible(contactButtonInView || aboutInView);
+  }, [contactButtonInView, aboutInView]);
 
   const shouldShowGallery = !contactButtonInView;
   const shouldShowAbout = !galleryInView && !contactButtonInView;
