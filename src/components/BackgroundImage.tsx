@@ -1,26 +1,17 @@
 
 import { useEffect, useState } from "react";
-import { backgroundImages } from "@/config/portfolioConfig";
-import { useHomeContent } from "@/hooks/useHomeContent";
+import { useBackgroundTransition } from "@/hooks/useBackgroundTransition";
 
 const BackgroundImage = () => {
   const [backgroundImage, setBackgroundImage] = useState<string | null>(null);
-  const { homeContent, loading } = useHomeContent();
+  const { currentBackgroundUrl } = useBackgroundTransition();
 
+  // Set the background image when it changes
   useEffect(() => {
-    if (homeContent?.backgroundConnection?.edges?.length) {
-      // Get all background URLs from the content
-      const contentBackgroundUrls = homeContent.backgroundConnection.edges.map(edge => edge.node.url);
-      
-      // Select random background image from Contentstack data
-      const randomIndex = Math.floor(Math.random() * contentBackgroundUrls.length);
-      setBackgroundImage(contentBackgroundUrls[randomIndex]);
-    } else if (!loading && backgroundImages.length) {
-      // Fallback to config backgrounds if no content backgrounds are available
-      const randomIndex = Math.floor(Math.random() * backgroundImages.length);
-      setBackgroundImage(backgroundImages[randomIndex]);
+    if (currentBackgroundUrl) {
+      setBackgroundImage(currentBackgroundUrl);
     }
-  }, [homeContent, loading]);
+  }, [currentBackgroundUrl]);
 
   if (!backgroundImage) {
     return null;

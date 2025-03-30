@@ -13,10 +13,16 @@ const HOME_QUERY = gql`
         contact_button
         location
         email
+        background_section_headline
+        background_info
+        about_the_site {
+          json
+        }
         backgroundConnection {
           edges {
             node {
               url
+              description
             }
           }
         }
@@ -33,10 +39,16 @@ export type HomeContent = {
   contact_button?: string[];
   location?: string;
   email?: string;
+  background_section_headline?: string;
+  background_info?: string;
+  about_the_site?: {
+    json: any;
+  };
   backgroundConnection?: {
     edges: Array<{
       node: {
         url: string;
+        description?: string;
       };
     }>;
   };

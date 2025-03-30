@@ -83,6 +83,20 @@
   .backdrop-blur {
     backdrop-filter: blur(8px);
   }
+  
+  .rotate-full {
+    transform: rotate(180deg);
+    transition: transform 1s ease-in-out;
+  }
+  
+  @keyframes rotate-full {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
 }
 
 /* Default to Inter font as fallback until Helmet Neue loads */
@@ -96,4 +110,25 @@ body {
   max-width: 100%;
   margin: 0;
   text-align: left;
+  transition: transform 1s ease-in-out;
+}
+
+/* Custom styling for bullet lists */
+@layer components {
+  .rich-text-content ul {
+    @apply space-y-2 my-4 ml-1;
+  }
+  
+  .rich-text-content li {
+    @apply relative pl-6 before:absolute before:left-0 before:top-2.5 before:h-2 before:w-2 before:rounded-full before:bg-gray-500 before:content-[''];
+  }
+  
+  /* Nested lists styling */
+  .rich-text-content ul ul {
+    @apply mt-2 ml-4;
+  }
+  
+  .rich-text-content ul ul li {
+    @apply before:bg-gray-400 before:h-1.5 before:w-1.5 before:top-3;
+  }
 }
