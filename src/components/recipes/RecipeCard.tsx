@@ -1,6 +1,5 @@
-
 import React from 'react';
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardFooter } from "@/components/ui/card";
 import { Recipe } from '@/types/recipe';
 import { Calendar, User } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';

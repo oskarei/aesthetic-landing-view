@@ -47,7 +47,7 @@ const transformRecipe = (item: any): Recipe => {
     date: item.date || new Date().toISOString(),
     body: item.body?.json ? JSON.stringify(item.body.json) : '',
     taxonomy: [], // Empty array since we're skipping taxonomy for now
-    image: '/placeholder.svg', // Using placeholder as image field was not in the schema
+    image: '', // Removing placeholder image
     slug: createRecipeSlug(item.title)
   };
 };

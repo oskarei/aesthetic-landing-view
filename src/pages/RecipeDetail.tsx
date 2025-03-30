@@ -24,7 +24,6 @@ const LoadingSkeleton = () => (
       <Skeleton className="h-4 w-full" />
       <Skeleton className="h-4 w-[80%]" />
     </div>
-    <Skeleton className="h-[300px] w-full" />
   </div>
 );
 
@@ -49,9 +48,7 @@ const RecipeDetail = () => {
       return (
         <div className="prose max-w-none">
           {bodyContent.split('\n\n').map((paragraph, idx) => (
-            <p key={idx} className={idx === 0 ? "text-lg font-medium" : ""}>
-              {paragraph.replace(/^#{1,6}\s+/, '')}
-            </p>
+            <p key={idx}>{paragraph}</p>
           ))}
         </div>
       );
@@ -114,14 +111,6 @@ const RecipeDetail = () => {
                   <span>{format(new Date(recipe.date), 'MMMM d, yyyy')}</span>
                 </div>
               </div>
-            </div>
-            
-            <div className="w-full h-[300px] bg-gray-100 rounded-md overflow-hidden">
-              <img 
-                src={recipe.image} 
-                alt={recipe.title} 
-                className="w-full h-full object-cover"
-              />
             </div>
             
             {renderRteContent(recipe.body)}
