@@ -209,7 +209,7 @@ const MainContent = () => {
           <AboutSection
             ref={aboutRef}
             shouldShowAbout={shouldShowAbout}
-            title="About Me"
+            title={homeContent?.title}
             aboutInfo={homeContent?.bio}
           />
         </div>
