@@ -19,13 +19,13 @@ const NavItem = ({ label, onClick, active }: NavItemProps) => {
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: -20 }}
       transition={{ duration: 0.3 }}
-      className="mb-4"
+      className="mb-6"
     >
       <Button 
         variant="ghost" 
         className={cn(
-          "w-full justify-start text-lg font-medium text-white hover:text-primary hover:bg-white/10",
-          active && "text-primary"
+          "w-full justify-start text-xl font-medium text-black hover:text-primary hover:bg-black/5",
+          active && "text-primary font-semibold"
         )}
         onClick={onClick}
       >
@@ -94,24 +94,38 @@ const HamburgerMenu = () => {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            transition={{ duration: 0.2 }}
-            className="absolute top-14 right-0 w-60 bg-black/80 backdrop-blur-md rounded-lg p-4 shadow-lg"
+            initial={{ opacity: 0, x: "100%" }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: "100%" }}
+            transition={{ type: "spring", damping: 25, stiffness: 300 }}
+            className="fixed top-0 right-0 w-full sm:w-96 h-full bg-white shadow-lg z-50 overflow-y-auto"
           >
-            <motion.ul className="flex flex-col space-y-1">
-              <NavItem 
-                label="To the Top!" 
-                onClick={() => handleNavigation(goToTop)} 
-                active={location.pathname === '/' && window.scrollY < 100}
-              />
-              <NavItem 
-                label="Gallery" 
-                onClick={() => handleNavigation(scrollToGallery)}
-                active={false}
-              />
-            </motion.ul>
+            <div className="flex justify-end p-5">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={toggleMenu}
+                className="rounded-full hover:bg-gray-100"
+                aria-label="Close menu"
+              >
+                <X size={24} className="text-black" />
+              </Button>
+            </div>
+            
+            <div className="px-8 py-12">
+              <motion.ul className="flex flex-col space-y-2">
+                <NavItem 
+                  label="To the Top!" 
+                  onClick={() => handleNavigation(goToTop)} 
+                  active={location.pathname === '/' && window.scrollY < 100}
+                />
+                <NavItem 
+                  label="Gallery" 
+                  onClick={() => handleNavigation(scrollToGallery)}
+                  active={false}
+                />
+              </motion.ul>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
