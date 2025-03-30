@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import ContactSheet from "./ContactSheet";
@@ -6,7 +7,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from "@/components/ui/carousel";
 import { Card, CardContent } from "@/components/ui/card";
 import { useInView } from "react-intersection-observer";
-import { ArrowBigDown } from "lucide-react";
+import { ArrowDown } from "lucide-react";
 
 const MainContent = () => {
   const [isContactOpen, setIsContactOpen] = useState(false);
@@ -96,14 +97,14 @@ const MainContent = () => {
                   <div className="flex flex-col items-center">
                     <Button
                       onClick={() => setIsContactOpen(true)}
-                      className="bg-white text-black hover:bg-white/90 px-6 py-6 text-lg rounded-full mb-6"
+                      className="bg-white text-black hover:bg-white/90 px-6 py-6 text-lg rounded-full mb-10"
                     >
                       {contactButtonText}
                     </Button>
-                    <ArrowBigDown 
+                    <ArrowDown 
                       className="animate-bounce text-white" 
-                      size={46}
-                      strokeWidth={2}
+                      size={32}
+                      strokeWidth={2.5}
                     />
                   </div>
                 </>
