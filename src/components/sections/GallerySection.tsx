@@ -1,5 +1,5 @@
 
-import React, { forwardRef } from "react";
+import React, { forwardRef, useEffect, useState } from "react";
 import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from "@/components/ui/carousel";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -25,6 +25,24 @@ const GallerySection = forwardRef<HTMLElement, GallerySectionProps>(({
   sectionHeadline = "Background Gallery",
   backgroundInfo
 }, ref) => {
+  // Add state to hold shuffled images
+  const [shuffledImages, setShuffledImages] = useState<Array<{url: string, description?: string}>>([]);
+  
+  // Shuffle the images when the component mounts or when backgroundImages changes
+  useEffect(() => {
+    // Create a copy of the backgroundImages array to avoid mutating the original
+    const imagesToShuffle = [...backgroundImages];
+    
+    // Fisher-Yates (Knuth) shuffle algorithm
+    for (let i = imagesToShuffle.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [imagesToShuffle[i], imagesToShuffle[j]] = [imagesToShuffle[j], imagesToShuffle[i]];
+    }
+    
+    setShuffledImages(imagesToShuffle);
+    console.log("Images shuffled:", imagesToShuffle.length);
+  }, [backgroundImages]);
+
   return (
     <section 
       ref={ref}
@@ -49,7 +67,8 @@ const GallerySection = forwardRef<HTMLElement, GallerySectionProps>(({
           className="w-full"
         >
           <CarouselContent className="-ml-1">
-            {backgroundImages.map((image, index) => (
+            {/* Use shuffledImages instead of backgroundImages */}
+            {shuffledImages.map((image, index) => (
               <CarouselItem key={index} className="pl-1 sm:basis-1/2 md:basis-1/3 lg:basis-1/4">
                 <div className="p-1">
                   <Card className="border border-gray-200 overflow-hidden shadow-sm">
