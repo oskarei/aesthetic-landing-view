@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import ContactSheet from "./ContactSheet";
 import { useHomeContent } from "@/hooks/useHomeContent";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
+import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from "@/components/ui/carousel";
 import { Card, CardContent } from "@/components/ui/card";
 import { useInView } from "react-intersection-observer";
 
@@ -52,8 +52,8 @@ const MainContent = () => {
         {/* ThemeToggle removed */}
       </header>
 
-      {/* Main scrollable content */}
-      <ScrollArea className="flex-1">
+      {/* Main scrollable content - ensure this has enough height to enable scrolling */}
+      <ScrollArea className="flex-1 h-[calc(100vh-4rem)]">
         <div className="flex flex-col">
           {/* Hero section */}
           <section 
@@ -93,8 +93,8 @@ const MainContent = () => {
           <section className="min-h-screen bg-black/80 px-6 md:px-12 lg:px-24 py-20">
             <h2 className="text-4xl font-bold text-white mb-12 text-center">Background Gallery</h2>
             
-            {/* Image Carousel */}
-            <div className="mb-12">
+            {/* Image Carousel with navigation buttons */}
+            <div className="mb-12 relative mx-auto max-w-6xl">
               <Carousel 
                 opts={{
                   align: "start",
@@ -119,6 +119,12 @@ const MainContent = () => {
                     </CarouselItem>
                   ))}
                 </CarouselContent>
+                <div className="absolute -left-4 top-1/2 -translate-y-1/2">
+                  <CarouselPrevious className="relative left-0" />
+                </div>
+                <div className="absolute -right-4 top-1/2 -translate-y-1/2">
+                  <CarouselNext className="relative right-0" />
+                </div>
               </Carousel>
             </div>
 
@@ -140,6 +146,28 @@ const MainContent = () => {
                 magna dictum porta. Curabitur aliquet quam id dui posuere blandit. Vestibulum ante ipsum primis 
                 in faucibus orci luctus et ultrices posuere cubilia Curae; Donec velit neque, auctor sit amet 
                 aliquam vel, ullamcorper sit amet ligula.
+              </p>
+            </div>
+          </section>
+
+          {/* Additional content section to ensure there's enough content to scroll */}
+          <section className="min-h-screen bg-black/90 px-6 md:px-12 lg:px-24 py-20">
+            <div className="max-w-3xl mx-auto text-white/90">
+              <h3 className="text-3xl font-bold mb-6">My Experience</h3>
+              <p className="mb-4 text-lg">
+                Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; 
+                Donec velit neque, auctor sit amet aliquam vel, ullamcorper sit amet ligula. Nulla quis 
+                lorem ut libero malesuada feugiat. Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a.
+              </p>
+              <p className="mb-4 text-lg">
+                Curabitur arcu erat, accumsan id imperdiet et, porttitor at sem. Vivamus magna justo, 
+                lacinia eget consectetur sed, convallis at tellus. Vestibulum ac diam sit amet quam 
+                vehicula elementum sed sit amet dui. Donec rutrum congue leo eget malesuada.
+              </p>
+              <p className="mb-4 text-lg">
+                Nulla porttitor accumsan tincidunt. Curabitur aliquet quam id dui posuere blandit. 
+                Curabitur non nulla sit amet nisl tempus convallis quis ac lectus. Praesent sapien massa, 
+                convallis a pellentesque nec, egestas non nisi.
               </p>
             </div>
           </section>
