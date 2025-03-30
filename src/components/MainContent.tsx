@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from "react";
 import ContactSheet from "./ContactSheet";
 import { useHomeContent } from "@/hooks/useHomeContent";
@@ -28,12 +27,9 @@ const MainContent = () => {
     rootMargin: "-100px 0px",
   });
 
-  // Combine refs for contact button
   const setContactButtonRef = (element: HTMLDivElement | null) => {
-    // Update the ref's current value
     contactButtonRef.current = element;
     
-    // Pass the element to the inView ref function
     if (typeof contactButtonInViewRef === 'function') {
       contactButtonInViewRef(element);
     }
@@ -119,6 +115,8 @@ const MainContent = () => {
             openLightbox={openLightbox}
             getThumbnailUrl={getThumbnailUrl}
             shouldShowGallery={shouldShowGallery}
+            sectionHeadline={homeContent?.background_section_headline}
+            backgroundInfo={homeContent?.background_info}
           />
 
           <ExperienceSection />

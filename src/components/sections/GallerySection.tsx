@@ -10,6 +10,8 @@ interface GallerySectionProps {
   openLightbox: (imageUrl: string, caption?: string) => void;
   getThumbnailUrl: (imageUrl: string) => string;
   shouldShowGallery: boolean;
+  sectionHeadline?: string;
+  backgroundInfo?: string;
 }
 
 const GallerySection = ({
@@ -18,7 +20,9 @@ const GallerySection = ({
   handleImageLoaded,
   openLightbox,
   getThumbnailUrl,
-  shouldShowGallery
+  shouldShowGallery,
+  sectionHeadline = "Background Gallery",
+  backgroundInfo
 }: GallerySectionProps) => {
   return (
     <section 
@@ -26,7 +30,13 @@ const GallerySection = ({
         shouldShowGallery ? 'opacity-100' : 'opacity-0 pointer-events-none'
       }`}
     >
-      <h2 className="text-4xl font-bold text-gray-900 mb-12 text-center">Background Gallery</h2>
+      <h2 className="text-4xl font-bold text-gray-900 mb-6 text-center">{sectionHeadline}</h2>
+      
+      {backgroundInfo && (
+        <div className="max-w-3xl mx-auto mb-12 text-gray-700">
+          <p className="text-lg">{backgroundInfo}</p>
+        </div>
+      )}
       
       <div className="mb-12 relative mx-auto max-w-6xl">
         <Carousel 
