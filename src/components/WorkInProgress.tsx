@@ -26,7 +26,7 @@ const WorkInProgress = () => {
               animation:
                 bounce 1s infinite ease-in-out,
                 flicker 2s infinite steps(1, end);
-              filter: drop-shadow(0 0 5px #008068); /* Darker shadow with slightly larger spread */
+              filter: drop-shadow(0 0 5px #00b899); /* Brighter shadow for contrast */
             }
 
             @keyframes bounce {
