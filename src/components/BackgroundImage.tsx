@@ -11,6 +11,7 @@ const BackgroundImage = () => {
   const lastChangeTimeRef = useRef<number>(0);
   const [scrollDirection, setScrollDirection] = useState<'up' | 'down' | null>(null);
   const prevScrollPosRef = useRef<number>(0);
+  const [isInGallerySection, setIsInGallerySection] = useState(false);
 
   // Get all background URLs from the content
   useEffect(() => {
@@ -47,11 +48,43 @@ const BackgroundImage = () => {
     }
   };
 
+  // Check if we're in the gallery section based on scroll position
+  useEffect(() => {
+    const checkIfInGallerySection = () => {
+      // Use a combination of scroll position and viewport height to determine
+      // if we're in the gallery section
+      const gallerySection = document.querySelector('[data-gallery-section]');
+      
+      if (gallerySection) {
+        const rect = gallerySection.getBoundingClientRect();
+        // Consider in gallery section when at least 10% of it is visible
+        const isInGallery = rect.top < window.innerHeight * 0.9;
+        setIsInGallerySection(isInGallery);
+        console.log("Is in gallery section:", isInGallery);
+      }
+    };
+
+    // Check initially
+    checkIfInGallerySection();
+    
+    // Use passive listener for better performance
+    window.addEventListener('scroll', checkIfInGallerySection, { passive: true });
+    
+    return () => {
+      window.removeEventListener('scroll', checkIfInGallerySection);
+    };
+  }, []);
+
   // Add scroll event listener to change background on scroll direction change
   useEffect(() => {
     const CHANGE_COOLDOWN = 800; // cooldown between background changes in ms
     
     const handleScroll = () => {
+      // Only process if we're in the gallery section
+      if (!isInGallerySection) {
+        return;
+      }
+      
       const currentScrollPos = window.scrollY;
       const currentTime = Date.now();
       const isCooldownComplete = currentTime - lastChangeTimeRef.current > CHANGE_COOLDOWN;
@@ -68,7 +101,7 @@ const BackgroundImage = () => {
         if (imagesToUse.length > 1) {
           selectNextBackground(imagesToUse);
           lastChangeTimeRef.current = currentTime;
-          console.log("Background changed on scroll direction change to up");
+          console.log("Background changed on scroll direction change to up in gallery section");
         }
       }
       
@@ -79,13 +112,13 @@ const BackgroundImage = () => {
     // Use passive event listener for better performance
     window.addEventListener('scroll', handleScroll, { passive: true });
     
-    console.log("New scroll event handler attached");
+    console.log("New scroll event handler attached, gallery-aware");
     
     // Clean up
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [contentBackgroundUrls, scrollDirection]); 
+  }, [contentBackgroundUrls, scrollDirection, isInGallerySection]); 
 
   if (!backgroundImage) {
     return null;

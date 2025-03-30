@@ -49,6 +49,7 @@ const GallerySection = forwardRef<HTMLElement, GallerySectionProps>(({
   return (
     <section 
       ref={ref}
+      data-gallery-section
       className={`min-h-screen bg-white px-6 md:px-12 lg:px-24 py-20 transition-opacity duration-500 ${
         shouldShowGallery ? 'opacity-100' : 'opacity-0 pointer-events-none'
       }`}
