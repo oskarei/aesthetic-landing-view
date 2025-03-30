@@ -17,7 +17,7 @@ const AboutSection = forwardRef<HTMLElement, AboutSectionProps>(({
     <section 
       ref={ref}
       data-about-section
-      className={`min-h-screen px-6 md:px-12 lg:px-24 py-20 transition-opacity duration-500 relative ${
+      className={`min-h-screen px-6 md:px-12 lg:px-24 py-20 transition-opacity duration-700 relative ${
         shouldShowAbout ? 'opacity-100' : 'opacity-0 pointer-events-none'
       }`}
     >
@@ -26,9 +26,9 @@ const AboutSection = forwardRef<HTMLElement, AboutSectionProps>(({
         
         <div className="mb-12 text-left">
           <p className="text-lg">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, urna eu tincidunt consectetur, 
+            {aboutInfo || `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, urna eu tincidunt consectetur, 
             nisl nunc euismod nisi, eu porttitor nisl nisl euismod nisi. Sed euismod, urna eu tincidunt consectetur,
-            nisl nunc euismod nisi, eu porttitor nisl nisl euismod nisi.
+            nisl nunc euismod nisi, eu porttitor nisl nisl euismod nisi.`}
           </p>
           <p className="text-lg mt-4">
             Sed euismod, urna eu tincidunt consectetur, nisl nunc euismod nisi, eu porttitor nisl nisl euismod nisi.

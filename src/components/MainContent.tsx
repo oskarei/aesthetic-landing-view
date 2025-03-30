@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from "react";
 import ContactSheet from "./ContactSheet";
 import { useHomeContent } from "@/hooks/useHomeContent";
@@ -33,12 +32,12 @@ const MainContent = () => {
   });
 
   const { ref: galleryInViewRef, inView: galleryInView } = useInView({
-    threshold: 0.3,
+    threshold: 0.7,
     rootMargin: "-50px 0px",
   });
 
   const { ref: aboutInViewRef, inView: aboutInView } = useInView({
-    threshold: 0.3,
+    threshold: 0.5,
     rootMargin: "-50px 0px",
   });
 
@@ -92,13 +91,15 @@ const MainContent = () => {
   }, [homeContent]);
 
   useEffect(() => {
-    // Only hide the background when we're fully in the gallery section and not in hero or about
-    setBackgroundVisible(!galleryInView || contactButtonInView || aboutInView);
+    // Only hide the background when fully in the gallery section
+    // Show background in hero and about sections
+    const isFullyInGallery = galleryInView && !contactButtonInView && !aboutInView;
+    setBackgroundVisible(!isFullyInGallery);
   }, [contactButtonInView, galleryInView, aboutInView]);
 
   // Determine visibility states with more emphasis on clear section boundaries
   const shouldShowGallery = !contactButtonInView;
-  const shouldShowAbout = !galleryInView && !contactButtonInView;
+  const shouldShowAbout = aboutInView || !galleryInView && !contactButtonInView;
 
   const scrollToGallery = () => {
     if (galleryRef.current) {
