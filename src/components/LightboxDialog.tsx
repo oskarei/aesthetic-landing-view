@@ -66,10 +66,10 @@ const LightboxDialog = ({ isOpen, onClose, imageUrl }: LightboxDialogProps) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="max-w-[95vw] max-h-[95vh] p-0 border-0 bg-black/95 shadow-none">
+      <DialogContent className="max-w-[95vw] max-h-[95vh] p-0 border-0 bg-black/95">
         <div className="relative w-full h-full flex items-center justify-center">
           {optimizedImageUrl && (
-            <div className="relative">
+            <div className="relative overflow-hidden">
               {/* Blurred small placeholder shown during loading */}
               {loading && placeholderUrl && (
                 <div className="absolute inset-0 w-full h-full flex items-center justify-center">
