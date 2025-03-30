@@ -57,10 +57,11 @@ const BackgroundImage = () => {
       
       if (gallerySection) {
         const rect = gallerySection.getBoundingClientRect();
-        // Consider in gallery section when at least 10% of it is visible
-        const isInGallery = rect.top < window.innerHeight * 0.9;
+        // Consider in gallery section when at least 50% of it is visible
+        // This is more strict than before to ensure we're properly in the gallery section
+        const isInGallery = rect.top < window.innerHeight * 0.5;
         setIsInGallerySection(isInGallery);
-        console.log("Is in gallery section:", isInGallery);
+        console.log("Is in gallery section:", isInGallery, "Gallery top position:", rect.top, "Threshold:", window.innerHeight * 0.5);
       }
     };
 
@@ -80,7 +81,7 @@ const BackgroundImage = () => {
     const CHANGE_COOLDOWN = 800; // cooldown between background changes in ms
     
     const handleScroll = () => {
-      // Only process if we're in the gallery section
+      // Only process if we're deep enough in the gallery section
       if (!isInGallerySection) {
         return;
       }
