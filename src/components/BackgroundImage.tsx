@@ -13,6 +13,7 @@ const BackgroundImage = () => {
   const prevScrollPosRef = useRef<number>(0);
   const [isInGallerySection, setIsInGallerySection] = useState(false);
   const [isInAboutSection, setIsInAboutSection] = useState(false);
+  const [isInHeroSection, setIsInHeroSection] = useState(true);
 
   // Get all background URLs from the content
   useEffect(() => {
@@ -52,11 +53,19 @@ const BackgroundImage = () => {
   // Check if we're in the gallery or about section based on scroll position
   useEffect(() => {
     const checkVisibleSections = () => {
+      // Check for hero section
+      const heroSection = document.querySelector('section:first-child');
+      if (heroSection) {
+        const heroRect = heroSection.getBoundingClientRect();
+        const isInHero = heroRect.bottom > 0;
+        setIsInHeroSection(isInHero);
+      }
+      
       // Check for gallery section
       const gallerySection = document.querySelector('[data-gallery-section]');
       if (gallerySection) {
         const galleryRect = gallerySection.getBoundingClientRect();
-        const isInGallery = galleryRect.top < window.innerHeight * 0.5;
+        const isInGallery = galleryRect.top < window.innerHeight * 0.5 && galleryRect.bottom > 0;
         setIsInGallerySection(isInGallery);
       }
       
@@ -91,8 +100,8 @@ const BackgroundImage = () => {
     const CHANGE_COOLDOWN = 800; // cooldown between background changes in ms
     
     const handleScroll = () => {
-      // Only process if we're deep enough in the gallery section
-      if (!isInGallerySection && !isInAboutSection) {
+      // Only process if we're in hero or about section
+      if (isInGallerySection && !isInHeroSection && !isInAboutSection) {
         return;
       }
       
@@ -106,13 +115,17 @@ const BackgroundImage = () => {
       // Update previous scroll position
       prevScrollPosRef.current = currentScrollPos;
       
-      // If direction changed and we're scrolling up with cooldown complete
-      if (currentDirection === 'up' && scrollDirection === 'down' && isCooldownComplete) {
+      // If direction changed and we're scrolling with cooldown complete
+      if (isCooldownComplete && (
+        (currentDirection === 'up' && scrollDirection === 'down') || 
+        (currentDirection === 'down' && scrollDirection === 'up') ||
+        (isInAboutSection && !isInGallerySection)
+      )) {
         const imagesToUse = contentBackgroundUrls.length ? contentBackgroundUrls : backgroundImages;
         if (imagesToUse.length > 1) {
           selectNextBackground(imagesToUse);
           lastChangeTimeRef.current = currentTime;
-          console.log("Background changed on scroll direction change to up");
+          console.log(`Background changed on scroll direction change to ${currentDirection}`);
         }
       }
       
@@ -127,7 +140,7 @@ const BackgroundImage = () => {
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [contentBackgroundUrls, scrollDirection, isInGallerySection, isInAboutSection]); 
+  }, [contentBackgroundUrls, scrollDirection, isInGallerySection, isInAboutSection, isInHeroSection]); 
 
   if (!backgroundImage) {
     return null;

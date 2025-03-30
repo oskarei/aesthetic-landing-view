@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from "react";
 import ContactSheet from "./ContactSheet";
 import { useHomeContent } from "@/hooks/useHomeContent";
@@ -58,6 +57,14 @@ const MainContent = () => {
     }
   };
 
+  const setAboutRef = (element: HTMLElement | null) => {
+    aboutRef.current = element;
+    
+    if (typeof aboutInViewRef === 'function') {
+      aboutInViewRef(element);
+    }
+  };
+
   useEffect(() => {
     if (homeContent?.title) {
       document.title = homeContent.title;
@@ -84,9 +91,8 @@ const MainContent = () => {
   }, [homeContent]);
 
   useEffect(() => {
-    // Hide background in gallery, show in hero and about sections
-    setBackgroundVisible(contactButtonInView || aboutInView);
-  }, [contactButtonInView, aboutInView]);
+    setBackgroundVisible(!galleryInView || contactButtonInView || aboutInView);
+  }, [contactButtonInView, galleryInView, aboutInView]);
 
   const shouldShowGallery = !contactButtonInView;
   const shouldShowAbout = !galleryInView && !contactButtonInView;
@@ -95,8 +101,6 @@ const MainContent = () => {
     if (galleryRef.current) {
       console.log("Scrolling to gallery at position:", galleryRef.current.offsetTop);
       
-      // Try multiple approaches to ensure scrolling works
-      // 1. Using the ScrollArea ref if available
       if (scrollAreaRef.current) {
         const viewportElement = scrollAreaRef.current.querySelector('[data-radix-scroll-area-viewport]');
         if (viewportElement) {
@@ -112,7 +116,6 @@ const MainContent = () => {
         }
       }
       
-      // 2. Fallback to window scroll as an additional method
       window.scrollTo({
         top: galleryRef.current.offsetTop,
         behavior: 'smooth'
@@ -214,7 +217,7 @@ const MainContent = () => {
           />
 
           <AboutSection
-            ref={aboutRef}
+            ref={setAboutRef}
             shouldShowAbout={shouldShowAbout}
             title={homeContent?.title}
             aboutInfo={homeContent?.bio}
