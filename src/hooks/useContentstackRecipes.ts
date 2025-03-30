@@ -3,10 +3,10 @@ import { gql, useQuery } from '@apollo/client';
 import { Recipe } from '@/types/recipe';
 import { createRecipeSlug } from '@/lib/slugify';
 
-// GraphQL query to fetch recipes
+// GraphQL query to fetch recipes - updated to match Contentstack schema
 export const RECIPES_QUERY = gql`
   query RecipesQuery($skip: Int, $limit: Int) {
-    all_recipe(locale: "is-is", skip: $skip, limit: $limit, sort: { date: -1 }) {
+    all_recipe(locale: "is-is", skip: $skip, limit: $limit) {
       items {
         title
         tagline
@@ -15,16 +15,12 @@ export const RECIPES_QUERY = gql`
         body {
           json
         }
-        taxonomy {
+        taxonomies {
           name
           values {
             name
             value
           }
-        }
-        image {
-          url
-          description
         }
         uid
       }
@@ -43,16 +39,12 @@ export const RECIPE_BY_UID_QUERY = gql`
       body {
         json
       }
-      taxonomy {
+      taxonomies {
         name
         values {
           name
           value
         }
-      }
-      image {
-        url
-        description
       }
       uid
     }
@@ -62,19 +54,19 @@ export const RECIPE_BY_UID_QUERY = gql`
 // Transform Contentstack recipe to our app's Recipe format
 const transformRecipe = (item: any): Recipe => {
   // Extract taxonomy values from the complex structure
-  const taxonomyTerms = item.taxonomy?.flatMap((tax: any) => 
+  const taxonomyTerms = item.taxonomies?.flatMap((tax: any) => 
     tax.values?.map((val: any) => val.value || val.name) || []
   ) || [];
-
+  
   return {
     id: item.uid,
     title: item.title || '',
     tagline: item.tagline || '',
     author: item.author || 'Ótilgreindur höfundur',
     date: item.date || new Date().toISOString(),
-    body: item.body?.json ? JSON.stringify(item.body.json) : '', // Store JSON as string for now
+    body: item.body?.json ? JSON.stringify(item.body.json) : '',
     taxonomy: taxonomyTerms,
-    image: item.image?.url || '/placeholder.svg',
+    image: '/placeholder.svg', // Using placeholder as image field was not in the schema
     slug: createRecipeSlug(item.title)
   };
 };
@@ -105,6 +97,7 @@ export const useContentstackRecipes = (skip: number = 0, limit: number = 5) => {
     });
   };
 
+  // Consider all fetched recipes as the full set if less than limit
   const hasMore = data?.all_recipe?.items.length >= limit;
 
   return { recipes, loading, error, loadMore, hasMore };

@@ -16,16 +16,12 @@ const RECIPE_BY_SLUG_QUERY = gql`
         body {
           json
         }
-        taxonomy {
+        taxonomies {
           name
           values {
             name
             value
           }
-        }
-        image {
-          url
-          description
         }
         uid
       }
@@ -36,7 +32,7 @@ const RECIPE_BY_SLUG_QUERY = gql`
 // Transform Contentstack recipe to our app's Recipe format
 const transformRecipe = (item: any): Recipe => {
   // Extract taxonomy values from the complex structure
-  const taxonomyTerms = item.taxonomy?.flatMap((tax: any) => 
+  const taxonomyTerms = item.taxonomies?.flatMap((tax: any) => 
     tax.values?.map((val: any) => val.value || val.name) || []
   ) || [];
 
@@ -46,9 +42,9 @@ const transformRecipe = (item: any): Recipe => {
     tagline: item.tagline || '',
     author: item.author || 'Ótilgreindur höfundur',
     date: item.date || new Date().toISOString(),
-    body: item.body?.json ? JSON.stringify(item.body.json) : '', // Store JSON as string for now
+    body: item.body?.json ? JSON.stringify(item.body.json) : '',
     taxonomy: taxonomyTerms,
-    image: item.image?.url || '/placeholder.svg',
+    image: '/placeholder.svg', // Using placeholder as image field was not in the schema
     slug: createRecipeSlug(item.title)
   };
 };
