@@ -70,16 +70,33 @@ const MainContent = () => {
   const shouldShowGallery = !contactButtonInView;
 
   const scrollToGallery = () => {
-    if (galleryRef.current && scrollAreaRef.current) {
-      const scrollTop = galleryRef.current.offsetTop;
-      console.log("Scrolling to gallery at position:", scrollTop);
+    if (galleryRef.current) {
+      console.log("Scrolling to gallery at position:", galleryRef.current.offsetTop);
       
-      scrollAreaRef.current.scrollTo({
-        top: scrollTop,
+      // Try multiple approaches to ensure scrolling works
+      // 1. Using the ScrollArea ref if available
+      if (scrollAreaRef.current) {
+        const viewportElement = scrollAreaRef.current.querySelector('[data-radix-scroll-area-viewport]');
+        if (viewportElement) {
+          (viewportElement as HTMLElement).scrollTo({
+            top: galleryRef.current.offsetTop,
+            behavior: 'smooth'
+          });
+        } else {
+          scrollAreaRef.current.scrollTo({
+            top: galleryRef.current.offsetTop,
+            behavior: 'smooth'
+          });
+        }
+      }
+      
+      // 2. Fallback to window scroll as an additional method
+      window.scrollTo({
+        top: galleryRef.current.offsetTop,
         behavior: 'smooth'
       });
     } else {
-      console.log("Gallery ref or scrollArea ref is null:", { 
+      console.log("Gallery ref is null:", { 
         galleryRef: !!galleryRef.current, 
         scrollAreaRef: !!scrollAreaRef.current 
       });

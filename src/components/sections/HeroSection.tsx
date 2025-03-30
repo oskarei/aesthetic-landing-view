@@ -61,11 +61,12 @@ const HeroSection = ({
             <div className="flex justify-center w-full">
               <div className="flex justify-center w-full absolute left-0 right-0">
                 <button 
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.preventDefault();
                     console.log("Arrow clicked, scrolling to gallery");
                     scrollToGallery();
                   }}
-                  className="bg-transparent border-none cursor-pointer transition-transform hover:translate-y-1 focus:outline-none p-3"
+                  className="bg-transparent border-none cursor-pointer transition-transform hover:translate-y-1 focus:outline-none p-5"
                   aria-label="Scroll to gallery"
                 >
                   <ArrowDown 
