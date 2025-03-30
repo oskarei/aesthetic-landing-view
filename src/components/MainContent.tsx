@@ -7,6 +7,7 @@ import { useInView } from "react-intersection-observer";
 import LightboxDialog from "./LightboxDialog";
 import HeroSection from "./sections/HeroSection";
 import GallerySection from "./sections/GallerySection";
+import HamburgerMenu from "./HamburgerMenu";
 
 const MainContent = () => {
   const [isContactOpen, setIsContactOpen] = useState(false);
@@ -131,7 +132,8 @@ const MainContent = () => {
   return (
     <div className="relative z-10 min-h-screen flex flex-col">
       <header className="p-6 flex justify-end sticky top-0 z-20">
-        {/* ThemeToggle removed */}
+        {/* HamburgerMenu added here */}
+        <HamburgerMenu />
       </header>
 
       <ScrollArea 
