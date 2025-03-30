@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import ContactSheet from "./ContactSheet";
@@ -78,7 +77,8 @@ const MainContent = () => {
   };
 
   const getThumbnailUrl = (imageUrl: string) => {
-    return `${imageUrl}?width=300&height=300&fit=crop`;
+    const baseUrl = imageUrl.split('?')[0];
+    return `${baseUrl}?width=300&height=300&fit=crop`;
   };
 
   return (
