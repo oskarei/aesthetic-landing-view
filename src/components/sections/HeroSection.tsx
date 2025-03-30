@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { useInView } from "react-intersection-observer";
@@ -30,6 +31,11 @@ const HeroSection = ({
   
   useEffect(() => {
     rootRef.current = document.getElementById('root');
+    
+    // Check if the site is rotated on load and reset it
+    if (rootRef.current && rootRef.current.classList.contains('rotate-full')) {
+      rootRef.current.classList.remove('rotate-full');
+    }
   }, []);
   
   const triggerEasterEgg = (e: React.MouseEvent) => {
@@ -66,7 +72,6 @@ const HeroSection = ({
       console.log('Easter egg activated! Clicked on the last character:', lastChar);
       
       if (rootRef.current) {
-        // Toggle the rotate-full class instead of removing and re-adding it
         rootRef.current.classList.toggle('rotate-full');
       }
     }
