@@ -68,12 +68,12 @@ const HeroSection = ({
     
     console.log('Click position:', x, 'Text width:', textWidth, 'Element width:', rect.width);
     
-    if (isLastCharClicked) {
+    if (isLastCharClicked && rootRef.current) {
       console.log('Easter egg activated! Clicked on the last character:', lastChar);
       
-      if (rootRef.current) {
-        rootRef.current.classList.toggle('rotate-full');
-      }
+      // Toggle the rotate-full class to flip the site 180 degrees or back to normal
+      rootRef.current.classList.toggle('rotate-full');
+      console.log('Rotation toggled:', rootRef.current.classList.contains('rotate-full'));
     }
   };
 
