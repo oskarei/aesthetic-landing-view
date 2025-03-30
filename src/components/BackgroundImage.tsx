@@ -12,6 +12,7 @@ const BackgroundImage = () => {
   const changeTimeoutRef = useRef<number | null>(null);
   const lastChangeTimeRef = useRef<number>(0);
   const backgroundIndexRef = useRef<number>(0);
+  const scrollConditionMetRef = useRef<boolean>(false);
 
   // Get all background URLs from the content
   useEffect(() => {
@@ -42,7 +43,7 @@ const BackgroundImage = () => {
       const nextIndex = (backgroundIndexRef.current + 1) % images.length;
       backgroundIndexRef.current = nextIndex;
       setBackgroundImage(images[nextIndex]);
-      console.log("Background changed to index:", nextIndex);
+      console.log("Background changed to index:", nextIndex, "URL:", images[nextIndex]);
     } else if (images.length === 1) {
       setBackgroundImage(images[0]);
       console.log("Only one background image available");
@@ -58,9 +59,17 @@ const BackgroundImage = () => {
       const currentScrollPos = window.scrollY;
       const currentTime = Date.now();
       
+      // Debug log current scroll position
+      if (currentScrollPos % 100 === 0) {
+        console.log("Scroll position:", currentScrollPos, "Hero height:", heroSectionHeight);
+      }
+      
       // Detect if user has scrolled below hero section
       if (currentScrollPos > heroSectionHeight * 0.8) {
-        setHasScrolledBelowHero(true);
+        if (!hasScrolledBelowHero) {
+          console.log("User has scrolled below hero section");
+          setHasScrolledBelowHero(true);
+        }
       }
       
       // Clear any pending timeout to prevent multiple rapid changes
@@ -69,27 +78,58 @@ const BackgroundImage = () => {
         changeTimeoutRef.current = null;
       }
       
-      // Only change background if:
-      // 1. Previously scrolled below hero section
-      // 2. Now scrolled back up into hero section (top third)
-      // 3. Coming from a position significantly below
-      // 4. We haven't changed the background recently (cooldown)
+      // Check scroll conditions
+      const isScrollingUp = prevScrollPos > currentScrollPos;
+      const isInHeroTopThird = currentScrollPos < heroSectionHeight * 0.3;
+      const hasScrolledUpEnough = prevScrollPos - currentScrollPos > 20; // Further reduced threshold
+      const isCooldownComplete = currentTime - lastChangeTimeRef.current > CHANGE_COOLDOWN;
+      
+      // Only change background if all conditions are met
       if (
         hasScrolledBelowHero && 
-        currentScrollPos < heroSectionHeight * 0.3 && 
-        prevScrollPos > currentScrollPos && 
-        prevScrollPos - currentScrollPos > 30 && // Further reduced threshold
-        currentTime - lastChangeTimeRef.current > CHANGE_COOLDOWN
+        isInHeroTopThird && 
+        isScrollingUp && 
+        hasScrolledUpEnough && 
+        isCooldownComplete
       ) {
+        // Log when all conditions are met
+        if (!scrollConditionMetRef.current) {
+          console.log("All scroll conditions met for background change:", {
+            hasScrolledBelowHero,
+            isInHeroTopThird,
+            isScrollingUp,
+            hasScrolledUpEnough,
+            isCooldownComplete,
+            currentScrollPos,
+            prevScrollPos
+          });
+          scrollConditionMetRef.current = true;
+        }
+        
         // Use a timeout to debounce the change and make sure scrolling has stabilized
         changeTimeoutRef.current = window.setTimeout(() => {
           const imagesToUse = contentBackgroundUrls.length ? contentBackgroundUrls : backgroundImages;
+          console.log("Changing background. Available images:", imagesToUse.length, "Current index:", backgroundIndexRef.current);
           selectNextBackground(imagesToUse); // Use sequential rotation instead of random
           setHasScrolledBelowHero(false); // Reset the flag
           lastChangeTimeRef.current = Date.now();
-          console.log("Changing background - returning to hero from below");
+          console.log("Background changed - returning to hero from below");
           changeTimeoutRef.current = null;
-        }, 50); // Further reduced timeout for more immediate response
+          scrollConditionMetRef.current = false;
+        }, 20); // Extremely short timeout for immediate response
+      } else {
+        scrollConditionMetRef.current = false;
+        
+        // Log why conditions aren't met when scrolling up in hero area
+        if (isScrollingUp && isInHeroTopThird) {
+          console.log("Some conditions not met:", {
+            hasScrolledBelowHero,
+            isInHeroTopThird,
+            isScrollingUp,
+            hasScrolledUpEnough,
+            isCooldownComplete
+          });
+        }
       }
       
       setPrevScrollPos(currentScrollPos);
@@ -99,6 +139,8 @@ const BackgroundImage = () => {
     document.addEventListener('scroll', handleScroll, { passive: true });
     window.addEventListener('scroll', handleScroll, { passive: true });
     
+    console.log("Scroll event handlers attached");
+    
     // Clean up
     return () => {
       if (changeTimeoutRef.current) {
@@ -106,8 +148,16 @@ const BackgroundImage = () => {
       }
       document.removeEventListener('scroll', handleScroll);
       window.removeEventListener('scroll', handleScroll);
+      console.log("Scroll event handlers removed");
     };
   }, [prevScrollPos, contentBackgroundUrls, hasScrolledBelowHero]); 
+
+  // Log when background image changes
+  useEffect(() => {
+    if (backgroundImage) {
+      console.log("Background image set to:", backgroundImage);
+    }
+  }, [backgroundImage]);
 
   if (!backgroundImage) {
     return null;
