@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useRecipeBySlug } from '@/hooks/useRecipeBySlug';
@@ -8,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { format } from 'date-fns';
 import { Calendar, User, ArrowLeft } from 'lucide-react';
 import HamburgerMenu from '@/components/HamburgerMenu';
+import { render } from '@contentstack/json-rte-serializer';
 
 const LoadingSkeleton = () => (
   <div className="space-y-6">
@@ -32,7 +32,6 @@ const RecipeDetail = () => {
   const navigate = useNavigate();
   const { recipe, loading, error } = useRecipeBySlug(slug || '');
 
-  // Create empty scroll functions as placeholders that match the HamburgerMenu props
   const scrollToGallery = () => {};
   const scrollToAbout = () => {};
 
@@ -40,41 +39,12 @@ const RecipeDetail = () => {
     navigate(-1);
   };
 
-  // Function to render RTE content
   const renderRteContent = (bodyContent: string) => {
     try {
-      // Try to parse the JSON string
       const contentJson = JSON.parse(bodyContent);
-      
-      // Simple renderer for JSON RTE content
-      // This is a basic implementation - could be expanded based on the actual structure
-      return (
-        <div className="prose max-w-none">
-          {Array.isArray(contentJson) ? 
-            contentJson.map((block: any, idx: number) => {
-              if (block.type === 'paragraph') {
-                return <p key={idx}>{block.children?.map((child: any) => child.text).join('')}</p>;
-              } else if (block.type === 'heading-one') {
-                return <h1 key={idx}>{block.children?.map((child: any) => child.text).join('')}</h1>;
-              } else if (block.type === 'heading-two') {
-                return <h2 key={idx}>{block.children?.map((child: any) => child.text).join('')}</h2>;
-              } else if (block.type === 'heading-three') {
-                return <h3 key={idx}>{block.children?.map((child: any) => child.text).join('')}</h3>;
-              } else if (block.type === 'list-item') {
-                return <li key={idx}>{block.children?.map((child: any) => child.text).join('')}</li>;
-              } else if (block.type === 'bulleted-list') {
-                return <ul key={idx}>{block.children?.map((child: any, i: number) => 
-                  <li key={i}>{child.children?.map((c: any) => c.text).join('')}</li>)}</ul>;
-              } else {
-                return <div key={idx}>{JSON.stringify(block)}</div>;
-              }
-            }) :
-            <p>{bodyContent}</p>
-          }
-        </div>
-      );
+      const htmlContent = render(contentJson);
+      return <div className="prose max-w-none" dangerouslySetInnerHTML={{ __html: htmlContent }} />;
     } catch (e) {
-      // Fallback to display as plain text if not valid JSON
       return (
         <div className="prose max-w-none">
           {bodyContent.split('\n\n').map((paragraph, idx) => (

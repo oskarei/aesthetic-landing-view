@@ -6,6 +6,7 @@ import { Calendar, User } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { format } from 'date-fns';
 import { Link } from 'react-router-dom';
+import { render } from '@contentstack/json-rte-serializer';
 
 interface RecipeCardProps {
   recipe: Recipe;
@@ -20,21 +21,15 @@ const RecipeCard: React.FC<RecipeCardProps> = ({ recipe }) => {
       // Try to parse the JSON string
       const contentJson = JSON.parse(bodyContent);
       
-      // Extract text from JSON RTE content
-      let allText = '';
-      if (Array.isArray(contentJson)) {
-        allText = contentJson
-          .filter(block => ['paragraph', 'heading-one', 'heading-two', 'heading-three'].includes(block.type))
-          .map(block => block.children?.map((child: any) => child.text).join(''))
-          .join(' ');
-      }
+      // First try to use the serializer to get HTML and then extract text
+      const htmlContent = render(contentJson);
       
-      // If we couldn't extract text from JSON, return the original string
-      if (!allText) {
-        return bodyContent.slice(0, maxLength) + (bodyContent.length > maxLength ? '...' : '');
-      }
+      // Create a temporary div to extract text from HTML
+      const tempDiv = document.createElement('div');
+      tempDiv.innerHTML = htmlContent;
+      const plainText = tempDiv.textContent || tempDiv.innerText || '';
       
-      return allText.slice(0, maxLength) + (allText.length > maxLength ? '...' : '');
+      return plainText.slice(0, maxLength) + (plainText.length > maxLength ? '...' : '');
     } catch (e) {
       // Fallback to the original string if not valid JSON
       return bodyContent.slice(0, maxLength) + (bodyContent.length > maxLength ? '...' : '');
