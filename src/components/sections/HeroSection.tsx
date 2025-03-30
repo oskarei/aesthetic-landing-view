@@ -26,6 +26,29 @@ const HeroSection = ({
     threshold: 0.2,
     triggerOnce: false,
   });
+  
+  const rootRef = useRef<HTMLElement | null>(null);
+  
+  useEffect(() => {
+    rootRef.current = document.getElementById('root');
+  }, []);
+  
+  const triggerEasterEgg = (text: string, event: React.MouseEvent) => {
+    const target = event.target as HTMLElement;
+    const clickedChar = (target.innerText || '').charAt(target.innerText.length - 1);
+    const lastChar = text.charAt(text.length - 1);
+    
+    if (clickedChar === lastChar && target.innerText.endsWith(lastChar)) {
+      console.log('Easter egg activated!');
+      
+      if (rootRef.current) {
+        rootRef.current.classList.remove('rotate-full');
+        // Force a reflow so the animation can be triggered again
+        void rootRef.current.offsetWidth;
+        rootRef.current.classList.add('rotate-full');
+      }
+    }
+  };
 
   return (
     <section 
@@ -40,7 +63,10 @@ const HeroSection = ({
         </div>
       ) : (
         <div className="w-full max-w-4xl">
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-4 leading-tight">
+          <h1 
+            className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-4 leading-tight cursor-pointer"
+            onClick={(e) => homeContent?.header && triggerEasterEgg(homeContent.header, e)}
+          >
             {homeContent?.header}
           </h1>
           <h2 className="text-xl md:text-2xl text-white/80 mb-6">

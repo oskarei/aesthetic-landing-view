@@ -83,6 +83,19 @@
   .backdrop-blur {
     backdrop-filter: blur(8px);
   }
+  
+  .rotate-full {
+    animation: rotate-full 1s ease-in-out;
+  }
+  
+  @keyframes rotate-full {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
 }
 
 /* Default to Inter font as fallback until Helmet Neue loads */
