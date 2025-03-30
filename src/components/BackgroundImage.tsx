@@ -72,7 +72,7 @@ const BackgroundImage = () => {
         hasScrolledBelowHero && 
         currentScrollPos < heroSectionHeight * 0.3 && 
         prevScrollPos > currentScrollPos && 
-        prevScrollPos - currentScrollPos > 80 &&
+        prevScrollPos - currentScrollPos > 50 && // Reduced threshold to make it easier to trigger
         currentTime - lastChangeTimeRef.current > CHANGE_COOLDOWN
       ) {
         // Use a timeout to debounce the change and make sure scrolling has stabilized
@@ -83,7 +83,7 @@ const BackgroundImage = () => {
           lastChangeTimeRef.current = Date.now();
           console.log("Changing background - returning to hero from below");
           changeTimeoutRef.current = null;
-        }, 200);
+        }, 100); // Reduced timeout to make it more responsive
       }
       
       setPrevScrollPos(currentScrollPos);
