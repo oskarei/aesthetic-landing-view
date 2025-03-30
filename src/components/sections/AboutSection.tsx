@@ -1,3 +1,4 @@
+
 import React, { forwardRef, useEffect, useState } from "react";
 import WorkInProgress from "@/components/WorkInProgress";
 import { motion } from "framer-motion";
@@ -55,7 +56,7 @@ const AboutSection = forwardRef<HTMLElement, AboutSectionProps>(({
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: shouldShowAbout ? 1 : 0, y: shouldShowAbout ? 0 : 30 }}
           transition={{ duration: 0.6, delay: 0.4 }}
-          className="mb-12 text-left"
+          className="mb-12 text-left bg-white/80 backdrop-blur-sm p-6 rounded-lg shadow-lg text-black"
         >
           {about_the_site && rteHtml ? (
             <div 
