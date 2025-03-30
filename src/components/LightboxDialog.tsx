@@ -13,35 +13,25 @@ interface LightboxDialogProps {
 
 const LightboxDialog = ({ isOpen, onClose, imageUrl, caption }: LightboxDialogProps) => {
   const [loading, setLoading] = useState(true);
-  const [optimizedImageUrl, setOptimizedImageUrl] = useState<string | null>(null);
-  const [placeholderUrl, setPlaceholderUrl] = useState<string | null>(null);
-  const [thumbnailUrl, setThumbnailUrl] = useState<string | null>(null);
+  const [fullSizeLoading, setFullSizeLoading] = useState(true);
+  const [lowResPlaceholder, setLowResPlaceholder] = useState<string | null>(null);
   const [zoomLevel, setZoomLevel] = useState(1);
 
-  // Generate optimized image URLs using Contentstack's Image Delivery API
+  // Generate placeholder and prepare original image when imageUrl changes
   useEffect(() => {
     if (imageUrl) {
-      // Create a placeholder blurred version (50x50)
-      const blurredPlaceholder = `${imageUrl}?quality=10&width=50&height=50&blur=30`;
-      setPlaceholderUrl(blurredPlaceholder);
+      // Create a small blurry placeholder (100px wide)
+      const blurredPlaceholder = `${imageUrl}?quality=10&width=100&blur=20`;
+      setLowResPlaceholder(blurredPlaceholder);
       
-      // Create a medium-sized thumbnail for immediate display (600px wide)
-      const thumbnail = `${imageUrl}?quality=60&width=600`;
-      setThumbnailUrl(thumbnail);
-      
-      // Create an optimized full-size version
-      // Using width=1600 as a reasonable max size for most screens
-      const optimized = `${imageUrl}?quality=85&width=1600`;
-      setOptimizedImageUrl(optimized);
-      
-      // Reset loading state when image URL changes
+      // Reset loading states when image URL changes
       setLoading(true);
+      setFullSizeLoading(true);
+      
       // Reset zoom when changing images
       setZoomLevel(1);
     } else {
-      setOptimizedImageUrl(null);
-      setPlaceholderUrl(null);
-      setThumbnailUrl(null);
+      setLowResPlaceholder(null);
     }
   }, [imageUrl]);
 
@@ -78,37 +68,40 @@ const LightboxDialog = ({ isOpen, onClose, imageUrl, caption }: LightboxDialogPr
         <DialogTitle className="sr-only">Image Preview</DialogTitle>
         
         <div className="relative w-full h-full flex flex-col items-center justify-center">
-          {(optimizedImageUrl || thumbnailUrl) && (
-            <div className="relative overflow-hidden flex-1">
-              {/* Blurred small placeholder shown while thumbnail loads */}
-              {loading && placeholderUrl && (
-                <div className="absolute inset-0 w-full h-full flex items-center justify-center">
+          {imageUrl && (
+            <div className="relative overflow-hidden flex-1 w-full h-full flex items-center justify-center">
+              {/* Blurry small placeholder shown while original loads */}
+              {lowResPlaceholder && (
+                <div 
+                  className={`absolute inset-0 w-full h-full flex items-center justify-center transition-opacity duration-500 ease-in-out ${fullSizeLoading ? 'opacity-100' : 'opacity-0'}`}
+                >
                   <img
-                    src={placeholderUrl}
+                    src={lowResPlaceholder}
                     alt="Loading preview"
-                    className="w-full h-full object-contain filter blur-lg opacity-70 transition-opacity duration-300"
+                    className="w-full h-full object-contain"
+                    style={{ 
+                      transform: `scale(${zoomLevel})`,
+                      filter: 'blur(8px)',
+                    }}
+                    onLoad={() => setLoading(false)}
                   />
-                  <Skeleton className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/20" />
+                  
+                  {loading && (
+                    <Skeleton className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/20" />
+                  )}
                 </div>
               )}
               
-              {/* Medium resolution thumbnail shown while high-res image loads */}
-              {loading && thumbnailUrl && (
-                <img
-                  src={thumbnailUrl}
-                  alt="Loading preview"
-                  className="max-w-full max-h-[80vh] object-contain transition-opacity duration-300"
-                  style={{ transform: `scale(${zoomLevel})` }}
-                />
-              )}
-              
-              {/* Main optimized image */}
+              {/* Full-size original image */}
               <img
-                src={optimizedImageUrl}
-                alt="Fullscreen view"
-                className={`max-w-full max-h-[80vh] object-contain transition-all duration-300 ease-in-out ${loading ? 'opacity-0' : 'opacity-100'}`}
-                style={{ transform: `scale(${zoomLevel})` }}
-                onLoad={() => setLoading(false)}
+                src={imageUrl} // Using the original URL without any query parameters
+                alt={caption || "Full size image"}
+                className="max-w-full max-h-[80vh] object-contain transition-opacity duration-500"
+                style={{ 
+                  transform: `scale(${zoomLevel})`,
+                  opacity: fullSizeLoading ? 0 : 1
+                }}
+                onLoad={() => setFullSizeLoading(false)}
               />
             </div>
           )}
