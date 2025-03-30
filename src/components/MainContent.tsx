@@ -133,11 +133,13 @@ const MainContent = () => {
                     </Button>
                   </div>
                   <div className="flex justify-center w-full">
-                    <ArrowDown 
-                      className="animate-bounce text-white" 
-                      size={32}
-                      strokeWidth={2.5}
-                    />
+                    <div className="flex justify-center w-full absolute left-0 right-0">
+                      <ArrowDown 
+                        className="animate-bounce text-white" 
+                        size={32}
+                        strokeWidth={2.5}
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
