@@ -29,8 +29,11 @@ const MainContent = () => {
   });
 
   // Combine refs for contact button
-  const setContactButtonRef = (element: HTMLDivElement) => {
+  const setContactButtonRef = (element: HTMLDivElement | null) => {
+    // Update the ref's current value
     contactButtonRef.current = element;
+    
+    // Pass the element to the inView ref function
     if (typeof contactButtonInViewRef === 'function') {
       contactButtonInViewRef(element);
     }

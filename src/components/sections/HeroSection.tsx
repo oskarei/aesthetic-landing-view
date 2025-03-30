@@ -10,7 +10,7 @@ interface HeroSectionProps {
   homeContent?: HomeContent;
   contactButtonText: string;
   setIsContactOpen: (isOpen: boolean) => void;
-  contactButtonRef: React.RefObject<HTMLDivElement>;
+  contactButtonRef: (element: HTMLDivElement | null) => void;
 }
 
 const HeroSection = ({ 
