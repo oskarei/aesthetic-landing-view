@@ -100,6 +100,7 @@ const MainContent = () => {
             shouldShowAbout={shouldShowAbout}
             title={homeContent?.title}
             aboutInfo={homeContent?.bio}
+            about_the_site={homeContent?.about_the_site}
           />
         </div>
       </ScrollArea>

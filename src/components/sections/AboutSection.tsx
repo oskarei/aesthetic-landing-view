@@ -6,12 +6,16 @@ import { motion } from "framer-motion";
 interface AboutSectionProps {
   title?: string;
   aboutInfo?: string;
+  about_the_site?: {
+    json: any;
+  };
   shouldShowAbout: boolean;
 }
 
 const AboutSection = forwardRef<HTMLElement, AboutSectionProps>(({
   title = "About Me",
   aboutInfo,
+  about_the_site,
   shouldShowAbout,
 }, ref) => {
   return (
@@ -38,15 +42,17 @@ const AboutSection = forwardRef<HTMLElement, AboutSectionProps>(({
           transition={{ duration: 0.6, delay: 0.4 }}
           className="mb-12 text-left"
         >
-          <p className="text-lg">
-            {aboutInfo || `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, urna eu tincidunt consectetur, 
-            nisl nunc euismod nisi, eu porttitor nisl nisl euismod nisi. Sed euismod, urna eu tincidunt consectetur,
-            nisl nunc euismod nisi, eu porttitor nisl nisl euismod nisi.`}
-          </p>
-          <p className="text-lg mt-4">
-            Sed euismod, urna eu tincidunt consectetur, nisl nunc euismod nisi, eu porttitor nisl nisl euismod nisi.
-            Sed euismod, urna eu tincidunt consectetur, nisl nunc euismod nisi, eu porttitor nisl nisl euismod nisi.
-          </p>
+          {about_the_site ? (
+            <div 
+              className="text-lg rich-text-content" 
+              dangerouslySetInnerHTML={{ __html: about_the_site.json.toString() }}
+            />
+          ) : (
+            <p className="text-lg">
+              {aboutInfo || `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, urna eu tincidunt consectetur, 
+              nisl nunc euismod nisi, eu porttitor nisl nisl euismod nisi.`}
+            </p>
+          )}
         </motion.div>
         
         <motion.div 
