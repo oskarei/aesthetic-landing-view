@@ -40,6 +40,53 @@ const RecipeDetail = () => {
     navigate(-1);
   };
 
+  // Function to render RTE content
+  const renderRteContent = (bodyContent: string) => {
+    try {
+      // Try to parse the JSON string
+      const contentJson = JSON.parse(bodyContent);
+      
+      // Simple renderer for JSON RTE content
+      // This is a basic implementation - could be expanded based on the actual structure
+      return (
+        <div className="prose max-w-none">
+          {Array.isArray(contentJson) ? 
+            contentJson.map((block: any, idx: number) => {
+              if (block.type === 'paragraph') {
+                return <p key={idx}>{block.children?.map((child: any) => child.text).join('')}</p>;
+              } else if (block.type === 'heading-one') {
+                return <h1 key={idx}>{block.children?.map((child: any) => child.text).join('')}</h1>;
+              } else if (block.type === 'heading-two') {
+                return <h2 key={idx}>{block.children?.map((child: any) => child.text).join('')}</h2>;
+              } else if (block.type === 'heading-three') {
+                return <h3 key={idx}>{block.children?.map((child: any) => child.text).join('')}</h3>;
+              } else if (block.type === 'list-item') {
+                return <li key={idx}>{block.children?.map((child: any) => child.text).join('')}</li>;
+              } else if (block.type === 'bulleted-list') {
+                return <ul key={idx}>{block.children?.map((child: any, i: number) => 
+                  <li key={i}>{child.children?.map((c: any) => c.text).join('')}</li>)}</ul>;
+              } else {
+                return <div key={idx}>{JSON.stringify(block)}</div>;
+              }
+            }) :
+            <p>{bodyContent}</p>
+          }
+        </div>
+      );
+    } catch (e) {
+      // Fallback to display as plain text if not valid JSON
+      return (
+        <div className="prose max-w-none">
+          {bodyContent.split('\n\n').map((paragraph, idx) => (
+            <p key={idx} className={idx === 0 ? "text-lg font-medium" : ""}>
+              {paragraph.replace(/^#{1,6}\s+/, '')}
+            </p>
+          ))}
+        </div>
+      );
+    }
+  };
+
   if (error) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -106,13 +153,7 @@ const RecipeDetail = () => {
               />
             </div>
             
-            <div className="prose max-w-none">
-              {recipe.body.split('\n\n').map((paragraph, idx) => (
-                <p key={idx} className={idx === 0 ? "text-lg font-medium" : ""}>
-                  {paragraph.replace(/^#{1,6}\s+/, '')}
-                </p>
-              ))}
-            </div>
+            {renderRteContent(recipe.body)}
           </article>
         ) : (
           <div className="text-center py-12">

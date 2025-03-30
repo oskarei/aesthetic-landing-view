@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Recipe } from '@/types/recipe';
@@ -5,7 +6,6 @@ import { Calendar, User } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { format } from 'date-fns';
 import { Link } from 'react-router-dom';
-import { createRecipeSlug } from '@/lib/slugify';
 
 interface RecipeCardProps {
   recipe: Recipe;
@@ -13,14 +13,40 @@ interface RecipeCardProps {
 
 const RecipeCard: React.FC<RecipeCardProps> = ({ recipe }) => {
   const formattedDate = format(new Date(recipe.date), 'MMMM d, yyyy');
-  const recipeSlug = recipe.slug || createRecipeSlug(recipe.title);
+  
+  // Function to get a plain text preview from RTE JSON content
+  const getTextPreview = (bodyContent: string, maxLength: number = 300) => {
+    try {
+      // Try to parse the JSON string
+      const contentJson = JSON.parse(bodyContent);
+      
+      // Extract text from JSON RTE content
+      let allText = '';
+      if (Array.isArray(contentJson)) {
+        allText = contentJson
+          .filter(block => ['paragraph', 'heading-one', 'heading-two', 'heading-three'].includes(block.type))
+          .map(block => block.children?.map((child: any) => child.text).join(''))
+          .join(' ');
+      }
+      
+      // If we couldn't extract text from JSON, return the original string
+      if (!allText) {
+        return bodyContent.slice(0, maxLength) + (bodyContent.length > maxLength ? '...' : '');
+      }
+      
+      return allText.slice(0, maxLength) + (allText.length > maxLength ? '...' : '');
+    } catch (e) {
+      // Fallback to the original string if not valid JSON
+      return bodyContent.slice(0, maxLength) + (bodyContent.length > maxLength ? '...' : '');
+    }
+  };
   
   return (
     <Card className="mb-8 overflow-hidden hover:shadow-lg transition-shadow">
       <CardHeader className="pb-0">
         <div className="flex justify-between items-start mb-3">
           <h2 className="text-2xl font-bold">
-            <Link to={`/matur/${recipeSlug}`} className="hover:text-primary transition-colors">
+            <Link to={`/matur/${recipe.slug}`} className="hover:text-primary transition-colors">
               {recipe.title}
             </Link>
           </h2>
@@ -46,11 +72,7 @@ const RecipeCard: React.FC<RecipeCardProps> = ({ recipe }) => {
           </div>
         </div>
         <div className="prose max-w-none">
-          {recipe.body.split('\n\n').slice(0, 2).map((paragraph, idx) => (
-            <p key={idx} className={idx === 0 ? "font-medium" : "text-muted-foreground"}>
-              {paragraph.replace(/^#{1,6}\s+/, '')}
-            </p>
-          ))}
+          <p className="font-medium">{getTextPreview(recipe.body, 100)}</p>
         </div>
       </CardContent>
       <CardFooter className="pt-2">
