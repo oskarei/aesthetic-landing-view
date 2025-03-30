@@ -67,6 +67,7 @@ const MainContent = () => {
     setCurrentImage(imageUrl);
     setCurrentCaption(caption || null);
     setIsLightboxOpen(true);
+    console.log("Opening lightbox with caption:", caption);
   };
 
   const closeLightbox = () => {
@@ -83,8 +84,9 @@ const MainContent = () => {
   };
 
   const getThumbnailUrl = (imageUrl: string) => {
-    const baseUrl = imageUrl.split('?')[0];
-    return `${baseUrl}?width=300&height=300&fit=crop`;
+    const [baseUrl, queryString] = imageUrl.split('?');
+    const queryParams = queryString ? `&width=300&height=300&fit=crop` : `?width=300&height=300&fit=crop`;
+    return `${baseUrl}${queryParams}`;
   };
 
   return (

@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from "react";
-import { Dialog, DialogContent, DialogClose } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogClose, DialogTitle } from "@/components/ui/dialog";
 import { X, ZoomIn, ZoomOut } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -68,6 +68,9 @@ const LightboxDialog = ({ isOpen, onClose, imageUrl, caption }: LightboxDialogPr
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="max-w-[95vw] max-h-[95vh] p-0 border-0 bg-black/95">
+        {/* Hidden DialogTitle for accessibility */}
+        <DialogTitle className="sr-only">Image Preview</DialogTitle>
+        
         <div className="relative w-full h-full flex flex-col items-center justify-center">
           {optimizedImageUrl && (
             <div className="relative overflow-hidden flex-1">
