@@ -2,7 +2,7 @@
 import React, { forwardRef, useEffect, useState } from "react";
 import WorkInProgress from "@/components/WorkInProgress";
 import { motion } from "framer-motion";
-import ContentstackJsonRteSerializer from "@contentstack/json-rte-serializer";
+import { ContentstackJsonRteSerializer } from "@contentstack/json-rte-serializer";
 
 interface AboutSectionProps {
   title?: string;
