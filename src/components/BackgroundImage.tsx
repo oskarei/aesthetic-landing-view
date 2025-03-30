@@ -6,21 +6,50 @@ import { useHomeContent } from "@/hooks/useHomeContent";
 const BackgroundImage = () => {
   const [backgroundImage, setBackgroundImage] = useState<string | null>(null);
   const { homeContent, loading } = useHomeContent();
+  const [prevScrollPos, setPrevScrollPos] = useState(0);
+  const [contentBackgroundUrls, setContentBackgroundUrls] = useState<string[]>([]);
 
+  // Get all background URLs from the content
   useEffect(() => {
     if (homeContent?.backgroundConnection?.edges?.length) {
-      // Get all background URLs from the content
-      const contentBackgroundUrls = homeContent.backgroundConnection.edges.map(edge => edge.node.url);
-      
-      // Select random background image from Contentstack data
-      const randomIndex = Math.floor(Math.random() * contentBackgroundUrls.length);
-      setBackgroundImage(contentBackgroundUrls[randomIndex]);
+      const urls = homeContent.backgroundConnection.edges.map(edge => edge.node.url);
+      setContentBackgroundUrls(urls);
+      selectRandomBackground(urls);
     } else if (!loading && backgroundImages.length) {
       // Fallback to config backgrounds if no content backgrounds are available
-      const randomIndex = Math.floor(Math.random() * backgroundImages.length);
-      setBackgroundImage(backgroundImages[randomIndex]);
+      selectRandomBackground(backgroundImages);
     }
   }, [homeContent, loading]);
+
+  // Function to select a random background image
+  const selectRandomBackground = (images: string[]) => {
+    if (images.length) {
+      const randomIndex = Math.floor(Math.random() * images.length);
+      setBackgroundImage(images[randomIndex]);
+    }
+  };
+
+  // Add scroll event listener to change background when scrolling back to top
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollPos = window.scrollY;
+      
+      // If we're scrolling back up and near the top (within 100px of the top)
+      if (prevScrollPos > currentScrollPos && currentScrollPos < 100) {
+        // Only change the background if we're coming from a scrolled position (more than 200px down)
+        if (prevScrollPos > 200) {
+          const imagesToUse = contentBackgroundUrls.length ? contentBackgroundUrls : backgroundImages;
+          selectRandomBackground(imagesToUse);
+          console.log("Changing background image on scroll to top");
+        }
+      }
+      
+      setPrevScrollPos(currentScrollPos);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [prevScrollPos, contentBackgroundUrls]);
 
   if (!backgroundImage) {
     return null;
