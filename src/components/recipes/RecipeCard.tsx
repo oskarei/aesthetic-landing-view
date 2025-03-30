@@ -6,7 +6,7 @@ import { Calendar, User } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { format } from 'date-fns';
 import { Link } from 'react-router-dom';
-import { render } from '@contentstack/json-rte-serializer';
+import { jsonToHtml } from '@contentstack/json-rte-serializer';
 
 interface RecipeCardProps {
   recipe: Recipe;
@@ -22,7 +22,7 @@ const RecipeCard: React.FC<RecipeCardProps> = ({ recipe }) => {
       const contentJson = JSON.parse(bodyContent);
       
       // First try to use the serializer to get HTML and then extract text
-      const htmlContent = render(contentJson);
+      const htmlContent = jsonToHtml(contentJson);
       
       // Create a temporary div to extract text from HTML
       const tempDiv = document.createElement('div');

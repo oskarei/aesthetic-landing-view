@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useRecipeBySlug } from '@/hooks/useRecipeBySlug';
@@ -7,7 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { format } from 'date-fns';
 import { Calendar, User, ArrowLeft } from 'lucide-react';
 import HamburgerMenu from '@/components/HamburgerMenu';
-import { render } from '@contentstack/json-rte-serializer';
+import { jsonToHtml } from '@contentstack/json-rte-serializer';
 
 const LoadingSkeleton = () => (
   <div className="space-y-6">
@@ -42,7 +43,7 @@ const RecipeDetail = () => {
   const renderRteContent = (bodyContent: string) => {
     try {
       const contentJson = JSON.parse(bodyContent);
-      const htmlContent = render(contentJson);
+      const htmlContent = jsonToHtml(contentJson);
       return <div className="prose max-w-none" dangerouslySetInnerHTML={{ __html: htmlContent }} />;
     } catch (e) {
       return (
