@@ -8,9 +8,10 @@ interface LightboxDialogProps {
   isOpen: boolean;
   onClose: () => void;
   imageUrl: string | null;
+  caption?: string | null;
 }
 
-const LightboxDialog = ({ isOpen, onClose, imageUrl }: LightboxDialogProps) => {
+const LightboxDialog = ({ isOpen, onClose, imageUrl, caption }: LightboxDialogProps) => {
   const [loading, setLoading] = useState(true);
   const [optimizedImageUrl, setOptimizedImageUrl] = useState<string | null>(null);
   const [placeholderUrl, setPlaceholderUrl] = useState<string | null>(null);
@@ -67,9 +68,9 @@ const LightboxDialog = ({ isOpen, onClose, imageUrl }: LightboxDialogProps) => {
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="max-w-[95vw] max-h-[95vh] p-0 border-0 bg-black/95">
-        <div className="relative w-full h-full flex items-center justify-center">
+        <div className="relative w-full h-full flex flex-col items-center justify-center">
           {optimizedImageUrl && (
-            <div className="relative overflow-hidden">
+            <div className="relative overflow-hidden flex-1">
               {/* Blurred small placeholder shown during loading */}
               {loading && placeholderUrl && (
                 <div className="absolute inset-0 w-full h-full flex items-center justify-center">
@@ -86,10 +87,17 @@ const LightboxDialog = ({ isOpen, onClose, imageUrl }: LightboxDialogProps) => {
               <img
                 src={optimizedImageUrl}
                 alt="Fullscreen view"
-                className={`max-w-full max-h-[90vh] object-contain transition-all duration-300 ease-in-out ${loading ? 'opacity-0' : 'opacity-100'}`}
+                className={`max-w-full max-h-[80vh] object-contain transition-all duration-300 ease-in-out ${loading ? 'opacity-0' : 'opacity-100'}`}
                 style={{ transform: `scale(${zoomLevel})` }}
                 onLoad={() => setLoading(false)}
               />
+            </div>
+          )}
+
+          {/* Caption */}
+          {caption && (
+            <div className="w-full max-w-[90vw] px-4 py-3 text-white/90 text-center">
+              <p className="text-sm md:text-base break-words">{caption}</p>
             </div>
           )}
 

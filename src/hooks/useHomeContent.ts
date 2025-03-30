@@ -17,6 +17,7 @@ const HOME_QUERY = gql`
           edges {
             node {
               url
+              description
             }
           }
         }
@@ -37,6 +38,7 @@ export type HomeContent = {
     edges: Array<{
       node: {
         url: string;
+        description?: string;
       };
     }>;
   };

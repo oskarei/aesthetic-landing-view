@@ -15,10 +15,11 @@ const MainContent = () => {
   const { homeContent, loading } = useHomeContent();
   const [contactButtonText, setContactButtonText] = useState("Get in Touch");
   const [backgroundVisible, setBackgroundVisible] = useState(true);
-  const [backgroundImages, setBackgroundImages] = useState<string[]>([]);
+  const [backgroundImages, setBackgroundImages] = useState<Array<{url: string, description?: string}>>([]);
   
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const [currentImage, setCurrentImage] = useState<string | null>(null);
+  const [currentCaption, setCurrentCaption] = useState<string | null>(null);
   const [loadingStates, setLoadingStates] = useState<{[key: string]: boolean}>({});
   
   const { ref: heroRef, inView: heroInView } = useInView({
@@ -42,12 +43,15 @@ const MainContent = () => {
     }
 
     if (homeContent?.backgroundConnection?.edges?.length) {
-      const images = homeContent.backgroundConnection.edges.map(edge => edge.node.url);
+      const images = homeContent.backgroundConnection.edges.map(edge => ({
+        url: edge.node.url,
+        description: edge.node.description
+      }));
       setBackgroundImages(images);
       
       const initialLoadingStates: {[key: string]: boolean} = {};
-      images.forEach(url => {
-        initialLoadingStates[url] = true;
+      images.forEach(image => {
+        initialLoadingStates[image.url] = true;
       });
       setLoadingStates(initialLoadingStates);
     }
@@ -59,14 +63,16 @@ const MainContent = () => {
 
   const shouldShowGallery = !heroIsVisible;
 
-  const openLightbox = (imageUrl: string) => {
+  const openLightbox = (imageUrl: string, caption?: string) => {
     setCurrentImage(imageUrl);
+    setCurrentCaption(caption || null);
     setIsLightboxOpen(true);
   };
 
   const closeLightbox = () => {
     setIsLightboxOpen(false);
     setCurrentImage(null);
+    setCurrentCaption(null);
   };
 
   const handleImageLoaded = (imageUrl: string) => {
@@ -156,28 +162,28 @@ const MainContent = () => {
                         <Card className="border-0 overflow-hidden">
                           <CardContent 
                             className="flex aspect-square items-center justify-center p-0 cursor-pointer hover:opacity-90 transition-opacity"
-                            onClick={() => openLightbox(image)}
+                            onClick={() => openLightbox(image.url, image.description)}
                           >
                             <div className="relative w-full h-full">
-                              {loadingStates[image] && (
+                              {loadingStates[image.url] && (
                                 <div className="absolute inset-0 flex items-center justify-center">
                                   <Skeleton className="w-full h-full rounded-md" />
                                 </div>
                               )}
                               
                               <img
-                                src={`${image}?quality=10&width=20&height=20&blur=20`}
-                                alt={`Placeholder ${index + 1}`}
+                                src={`${image.url}?quality=10&width=20&height=20&blur=20`}
+                                alt={image.description || `Placeholder ${index + 1}`}
                                 className="absolute inset-0 w-full h-full object-cover rounded-md filter blur-md transition-opacity duration-300"
-                                style={{ opacity: loadingStates[image] ? 1 : 0 }}
+                                style={{ opacity: loadingStates[image.url] ? 1 : 0 }}
                               />
                               
                               <img
-                                src={getThumbnailUrl(image)}
-                                alt={`Background ${index + 1}`}
+                                src={getThumbnailUrl(image.url)}
+                                alt={image.description || `Background ${index + 1}`}
                                 className="w-full h-full object-cover rounded-md transition-opacity duration-500"
-                                style={{ opacity: loadingStates[image] ? 0 : 1 }}
-                                onLoad={() => handleImageLoaded(image)}
+                                style={{ opacity: loadingStates[image.url] ? 0 : 1 }}
+                                onLoad={() => handleImageLoaded(image.url)}
                               />
                             </div>
                           </CardContent>
@@ -253,7 +259,8 @@ const MainContent = () => {
       <LightboxDialog 
         isOpen={isLightboxOpen} 
         onClose={closeLightbox} 
-        imageUrl={currentImage} 
+        imageUrl={currentImage}
+        caption={currentCaption} 
       />
     </div>
   );
