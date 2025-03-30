@@ -27,6 +27,11 @@ const MainContent = () => {
     triggerOnce: false,
   });
 
+  const { ref: contactButtonRef, inView: contactButtonInView } = useInView({
+    threshold: 0.2,
+    rootMargin: "-100px 0px",
+  });
+
   const { ref: heroExitRef, inView: heroIsVisible } = useInView({
     threshold: 0.1,
     rootMargin: "-100px 0px",
@@ -58,10 +63,10 @@ const MainContent = () => {
   }, [homeContent]);
 
   useEffect(() => {
-    setBackgroundVisible(heroInView);
-  }, [heroInView]);
+    setBackgroundVisible(contactButtonInView);
+  }, [contactButtonInView]);
 
-  const shouldShowGallery = !heroIsVisible;
+  const shouldShowGallery = !contactButtonInView;
 
   const openLightbox = (imageUrl: string, caption?: string) => {
     setCurrentImage(imageUrl);
@@ -98,12 +103,7 @@ const MainContent = () => {
       <ScrollArea className="flex-1 h-[calc(100vh-4rem)]">
         <div className="flex flex-col">
           <section 
-            ref={(node) => {
-              if (node) {
-                heroRef(node);
-                heroExitRef(node);
-              }
-            }}
+            ref={heroRef}
             className="min-h-screen flex items-center px-6 md:px-12 lg:px-24 transition-opacity duration-500 relative"
           >
             {loading ? (
@@ -124,12 +124,14 @@ const MainContent = () => {
                   {homeContent?.bio}
                 </p>
                 <div className="flex flex-col items-start">
-                  <Button
-                    onClick={() => setIsContactOpen(true)}
-                    className="bg-white text-black hover:bg-white/90 px-6 py-6 text-lg rounded-full mb-10"
-                  >
-                    {contactButtonText}
-                  </Button>
+                  <div ref={contactButtonRef}>
+                    <Button
+                      onClick={() => setIsContactOpen(true)}
+                      className="bg-white text-black hover:bg-white/90 px-6 py-6 text-lg rounded-full mb-10"
+                    >
+                      {contactButtonText}
+                    </Button>
+                  </div>
                   <div className="flex justify-center w-full">
                     <ArrowDown 
                       className="animate-bounce text-white" 
