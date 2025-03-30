@@ -7,6 +7,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from "@/components/ui/carousel";
 import { Card, CardContent } from "@/components/ui/card";
 import { useInView } from "react-intersection-observer";
+import { ArrowDown } from "lucide-react";
 
 const MainContent = () => {
   const [isContactOpen, setIsContactOpen] = useState(false);
@@ -73,7 +74,7 @@ const MainContent = () => {
                 heroExitRef(node);
               }
             }}
-            className="min-h-screen flex items-center px-6 md:px-12 lg:px-24 transition-opacity duration-500"
+            className="min-h-screen flex items-center px-6 md:px-12 lg:px-24 transition-opacity duration-500 relative"
           >
             <div className="max-w-xl">
               {loading ? (
@@ -101,6 +102,16 @@ const MainContent = () => {
                   </Button>
                 </>
               )}
+            </div>
+            
+            {/* Scroll down arrow */}
+            <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2 flex flex-col items-center">
+              <span className="text-white/80 text-sm mb-2">Scroll for more</span>
+              <ArrowDown 
+                className="animate-bounce text-white" 
+                size={32}
+                strokeWidth={2.5}
+              />
             </div>
           </section>
 
