@@ -77,6 +77,10 @@ const HamburgerMenu = ({ scrollToGallery, scrollToAbout }: HamburgerMenuProps) =
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const goToRecipes = () => {
+    navigate('/matur');
+  };
+
   return (
     <div className="fixed top-5 right-5 z-30">
       <Button
@@ -126,6 +130,11 @@ const HamburgerMenu = ({ scrollToGallery, scrollToAbout }: HamburgerMenuProps) =
                   label="About" 
                   onClick={() => handleNavigation(scrollToAbout)}
                   active={false}
+                />
+                <NavItem 
+                  label="Recipes (in Icelandic)" 
+                  onClick={() => handleNavigation(goToRecipes)}
+                  active={location.pathname === '/matur'}
                 />
               </motion.ul>
             </div>

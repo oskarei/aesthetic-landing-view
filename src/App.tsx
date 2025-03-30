@@ -8,6 +8,7 @@ import { ApolloProvider } from "@apollo/client";
 import contentstackClient from "./lib/contentstackClient";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
+import RecipesPage from "./pages/Recipes";
 
 const queryClient = new QueryClient();
 
@@ -20,6 +21,7 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
+            <Route path="/matur" element={<RecipesPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
