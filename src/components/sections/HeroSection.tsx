@@ -1,0 +1,75 @@
+
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { useInView } from "react-intersection-observer";
+import { ArrowDown } from "lucide-react";
+import { HomeContent } from "@/hooks/useHomeContent";
+
+interface HeroSectionProps {
+  loading: boolean;
+  homeContent?: HomeContent;
+  contactButtonText: string;
+  setIsContactOpen: (isOpen: boolean) => void;
+  contactButtonRef: React.RefObject<HTMLDivElement>;
+}
+
+const HeroSection = ({ 
+  loading, 
+  homeContent, 
+  contactButtonText, 
+  setIsContactOpen,
+  contactButtonRef
+}: HeroSectionProps) => {
+  const { ref: heroRef, inView: heroInView } = useInView({
+    threshold: 0.2,
+    triggerOnce: false,
+  });
+
+  return (
+    <section 
+      ref={heroRef}
+      className="min-h-screen flex items-center px-6 md:px-12 lg:px-24 transition-opacity duration-500 relative"
+    >
+      {loading ? (
+        <div className="animate-pulse space-y-4">
+          <div className="h-10 bg-white/20 rounded w-3/4"></div>
+          <div className="h-6 bg-white/20 rounded w-1/2"></div>
+          <div className="h-24 bg-white/20 rounded w-full"></div>
+        </div>
+      ) : (
+        <div className="w-full max-w-4xl">
+          <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-4 leading-tight">
+            {homeContent?.header}
+          </h1>
+          <h2 className="text-xl md:text-2xl text-white/80 mb-6">
+            {homeContent?.subheader}
+          </h2>
+          <p className="text-lg text-white/70 mb-10 max-w-md">
+            {homeContent?.bio}
+          </p>
+          <div className="flex flex-col items-start">
+            <div ref={contactButtonRef}>
+              <Button
+                onClick={() => setIsContactOpen(true)}
+                className="bg-white text-black hover:bg-white/90 px-6 py-6 text-lg rounded-full mb-10"
+              >
+                {contactButtonText}
+              </Button>
+            </div>
+            <div className="flex justify-center w-full">
+              <div className="flex justify-center w-full absolute left-0 right-0">
+                <ArrowDown 
+                  className="animate-bounce text-white" 
+                  size={32}
+                  strokeWidth={2.5}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </section>
+  );
+};
+
+export default HeroSection;

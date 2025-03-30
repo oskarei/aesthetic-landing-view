@@ -1,15 +1,13 @@
 
-import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
+import { useState, useEffect, useRef } from "react";
 import ContactSheet from "./ContactSheet";
 import { useHomeContent } from "@/hooks/useHomeContent";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from "@/components/ui/carousel";
-import { Card, CardContent } from "@/components/ui/card";
 import { useInView } from "react-intersection-observer";
-import { ArrowDown } from "lucide-react";
 import LightboxDialog from "./LightboxDialog";
-import { Skeleton } from "@/components/ui/skeleton";
+import HeroSection from "./sections/HeroSection";
+import GallerySection from "./sections/GallerySection";
+import ExperienceSection from "./sections/ExperienceSection";
 
 const MainContent = () => {
   const [isContactOpen, setIsContactOpen] = useState(false);
@@ -23,20 +21,20 @@ const MainContent = () => {
   const [currentCaption, setCurrentCaption] = useState<string | null>(null);
   const [loadingStates, setLoadingStates] = useState<{[key: string]: boolean}>({});
   
-  const { ref: heroRef, inView: heroInView } = useInView({
-    threshold: 0.2,
-    triggerOnce: false,
-  });
-
-  const { ref: contactButtonRef, inView: contactButtonInView } = useInView({
+  const contactButtonRef = useRef<HTMLDivElement>(null);
+  
+  const { ref: contactButtonInViewRef, inView: contactButtonInView } = useInView({
     threshold: 0.2,
     rootMargin: "-100px 0px",
   });
 
-  const { ref: heroExitRef, inView: heroIsVisible } = useInView({
-    threshold: 0.1,
-    rootMargin: "-100px 0px",
-  });
+  // Combine refs for contact button
+  const setContactButtonRef = (element: HTMLDivElement) => {
+    contactButtonRef.current = element;
+    if (typeof contactButtonInViewRef === 'function') {
+      contactButtonInViewRef(element);
+    }
+  };
 
   useEffect(() => {
     if (homeContent?.title) {
@@ -103,152 +101,24 @@ const MainContent = () => {
 
       <ScrollArea className="flex-1 h-[calc(100vh-4rem)]">
         <div className="flex flex-col">
-          <section 
-            ref={heroRef}
-            className="min-h-screen flex items-center px-6 md:px-12 lg:px-24 transition-opacity duration-500 relative"
-          >
-            {loading ? (
-              <div className="animate-pulse space-y-4">
-                <div className="h-10 bg-white/20 rounded w-3/4"></div>
-                <div className="h-6 bg-white/20 rounded w-1/2"></div>
-                <div className="h-24 bg-white/20 rounded w-full"></div>
-              </div>
-            ) : (
-              <div className="w-full max-w-4xl">
-                <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-4 leading-tight">
-                  {homeContent?.header}
-                </h1>
-                <h2 className="text-xl md:text-2xl text-white/80 mb-6">
-                  {homeContent?.subheader}
-                </h2>
-                <p className="text-lg text-white/70 mb-10 max-w-md">
-                  {homeContent?.bio}
-                </p>
-                <div className="flex flex-col items-start">
-                  <div ref={contactButtonRef}>
-                    <Button
-                      onClick={() => setIsContactOpen(true)}
-                      className="bg-white text-black hover:bg-white/90 px-6 py-6 text-lg rounded-full mb-10"
-                    >
-                      {contactButtonText}
-                    </Button>
-                  </div>
-                  <div className="flex justify-center w-full">
-                    <div className="flex justify-center w-full absolute left-0 right-0">
-                      <ArrowDown 
-                        className="animate-bounce text-white" 
-                        size={32}
-                        strokeWidth={2.5}
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-          </section>
+          <HeroSection 
+            loading={loading}
+            homeContent={homeContent}
+            contactButtonText={contactButtonText}
+            setIsContactOpen={setIsContactOpen}
+            contactButtonRef={setContactButtonRef}
+          />
 
-          <section 
-            className={`min-h-screen bg-white px-6 md:px-12 lg:px-24 py-20 transition-opacity duration-500 ${
-              shouldShowGallery ? 'opacity-100' : 'opacity-0 pointer-events-none'
-            }`}
-          >
-            <h2 className="text-4xl font-bold text-gray-900 mb-12 text-center">Background Gallery</h2>
-            
-            <div className="mb-12 relative mx-auto max-w-6xl">
-              <Carousel 
-                opts={{
-                  align: "start",
-                  loop: true,
-                }}
-                className="w-full"
-              >
-                <CarouselContent className="-ml-1">
-                  {backgroundImages.map((image, index) => (
-                    <CarouselItem key={index} className="pl-1 sm:basis-1/2 md:basis-1/3 lg:basis-1/4">
-                      <div className="p-1">
-                        <Card className="border border-gray-200 overflow-hidden shadow-sm">
-                          <CardContent 
-                            className="flex aspect-square items-center justify-center p-0 cursor-pointer hover:opacity-90 transition-opacity"
-                            onClick={() => openLightbox(image.url, image.description)}
-                          >
-                            <div className="relative w-full h-full">
-                              {loadingStates[image.url] && (
-                                <div className="absolute inset-0 flex items-center justify-center">
-                                  <Skeleton className="w-full h-full rounded-md bg-gray-200" />
-                                </div>
-                              )}
-                              
-                              <img
-                                src={`${image.url}?quality=10&width=20&height=20&blur=20`}
-                                alt={image.description || `Placeholder ${index + 1}`}
-                                className="absolute inset-0 w-full h-full object-cover rounded-md filter blur-md transition-opacity duration-300"
-                                style={{ opacity: loadingStates[image.url] ? 1 : 0 }}
-                              />
-                              
-                              <img
-                                src={getThumbnailUrl(image.url)}
-                                alt={image.description || `Background ${index + 1}`}
-                                className="w-full h-full object-cover rounded-md transition-opacity duration-500"
-                                style={{ opacity: loadingStates[image.url] ? 0 : 1 }}
-                                onLoad={() => handleImageLoaded(image.url)}
-                              />
-                            </div>
-                          </CardContent>
-                        </Card>
-                      </div>
-                    </CarouselItem>
-                  ))}
-                </CarouselContent>
-                <div className="absolute -left-4 top-1/2 -translate-y-1/2">
-                  <CarouselPrevious className="relative left-0 bg-white text-gray-900 border-gray-200 hover:bg-gray-100" />
-                </div>
-                <div className="absolute -right-4 top-1/2 -translate-y-1/2">
-                  <CarouselNext className="relative right-0 bg-white text-gray-900 border-gray-200 hover:bg-gray-100" />
-                </div>
-              </Carousel>
-            </div>
+          <GallerySection
+            backgroundImages={backgroundImages}
+            loadingStates={loadingStates}
+            handleImageLoaded={handleImageLoaded}
+            openLightbox={openLightbox}
+            getThumbnailUrl={getThumbnailUrl}
+            shouldShowGallery={shouldShowGallery}
+          />
 
-            <div className="max-w-3xl mx-auto text-gray-800">
-              <h3 className="text-3xl font-bold mb-6 text-gray-900">My Journey</h3>
-              <p className="mb-4 text-lg">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, diam quis aliquam tincidunt, 
-                nisl nunc fermentum nunc, vitae aliquet nunc nisl eu nunc. Sed euismod, diam quis aliquam tincidunt,
-                nisl nunc fermentum nunc, vitae aliquet nunc nisl eu nunc.
-              </p>
-              <p className="mb-4 text-lg">
-                Proin eget tortor risus. Curabitur non nulla sit amet nisl tempus convallis quis ac lectus. 
-                Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus. Nulla quis lorem ut libero 
-                malesuada feugiat. Nulla porttitor accumsan tincidunt.
-              </p>
-              <p className="mb-4 text-lg">
-                Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui. Cras ultricies ligula sed 
-                magna dictum porta. Curabitur aliquet quam id dui posuere blandit. Vestibulum ante ipsum primis 
-                in faucibus orci luctus et ultrices posuere cubilia Curae; Donec velit neque, auctor sit amet 
-                aliquam vel, ullamcorper sit amet ligula.
-              </p>
-            </div>
-          </section>
-
-          <section className="min-h-screen bg-gray-100 px-6 md:px-12 lg:px-24 py-20">
-            <div className="max-w-3xl mx-auto text-gray-800">
-              <h3 className="text-3xl font-bold mb-6 text-gray-900">My Experience</h3>
-              <p className="mb-4 text-lg">
-                Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; 
-                Donec velit neque, auctor sit amet aliquam vel, ullamcorper sit amet ligula. Nulla quis 
-                lorem ut libero malesuada feugiat. Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a.
-              </p>
-              <p className="mb-4 text-lg">
-                Curabitur arcu erat, accumsan id imperdiet et, porttitor at sem. Vivamus magna justo, 
-                lacinia eget consectetur sed, convallis at tellus. Vestibulum ac diam sit amet quam 
-                vehicula elementum sed sit amet dui. Donec rutrum congue leo eget malesuada.
-              </p>
-              <p className="mb-4 text-lg">
-                Nulla porttitor accumsan tincidunt. Curabitur aliquet quam id dui posuere blandit. 
-                Curabitur non nulla sit amet nisl tempus convallis quis ac lectus. Praesent sapien massa, 
-                convallis a pellentesque nec, egestas non nisi.
-              </p>
-            </div>
-          </section>
+          <ExperienceSection />
         </div>
       </ScrollArea>
 
