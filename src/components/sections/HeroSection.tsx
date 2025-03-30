@@ -33,13 +33,38 @@ const HeroSection = ({
     rootRef.current = document.getElementById('root');
   }, []);
   
-  const triggerEasterEgg = (text: string, event: React.MouseEvent) => {
-    const target = event.target as HTMLElement;
-    const clickedChar = (target.innerText || '').charAt(target.innerText.length - 1);
-    const lastChar = text.charAt(text.length - 1);
+  const triggerEasterEgg = (e: React.MouseEvent) => {
+    // Get the clicked element text content
+    const target = e.target as HTMLElement;
+    const header = homeContent?.header || '';
+    const lastChar = header.charAt(header.length - 1);
     
-    if (clickedChar === lastChar && target.innerText.endsWith(lastChar)) {
-      console.log('Easter egg activated!');
+    // Calculate click position relative to the target element
+    const rect = target.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    
+    // Get the width of text content up to the last character
+    const textWithoutLastChar = header.slice(0, -1);
+    const tempSpan = document.createElement('span');
+    tempSpan.style.visibility = 'hidden';
+    tempSpan.style.position = 'absolute';
+    tempSpan.style.fontSize = window.getComputedStyle(target).fontSize;
+    tempSpan.style.fontFamily = window.getComputedStyle(target).fontFamily;
+    tempSpan.style.fontWeight = window.getComputedStyle(target).fontWeight;
+    tempSpan.innerText = textWithoutLastChar;
+    document.body.appendChild(tempSpan);
+    
+    const textWidth = tempSpan.getBoundingClientRect().width;
+    document.body.removeChild(tempSpan);
+    
+    // Check if click is on the last character
+    const lastCharWidth = rect.width - textWidth;
+    const isLastCharClicked = x > textWidth && x <= rect.width;
+    
+    console.log('Click position:', x, 'Text width:', textWidth, 'Element width:', rect.width);
+    
+    if (isLastCharClicked) {
+      console.log('Easter egg activated! Clicked on the last character:', lastChar);
       
       if (rootRef.current) {
         rootRef.current.classList.remove('rotate-full');
@@ -65,7 +90,7 @@ const HeroSection = ({
         <div className="w-full max-w-4xl">
           <h1 
             className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-4 leading-tight cursor-pointer"
-            onClick={(e) => homeContent?.header && triggerEasterEgg(homeContent.header, e)}
+            onClick={triggerEasterEgg}
           >
             {homeContent?.header}
           </h1>
