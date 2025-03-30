@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import ContactSheet from "./ContactSheet";
@@ -147,11 +148,11 @@ const MainContent = () => {
           </section>
 
           <section 
-            className={`min-h-screen bg-black/80 px-6 md:px-12 lg:px-24 py-20 transition-opacity duration-500 ${
+            className={`min-h-screen bg-white px-6 md:px-12 lg:px-24 py-20 transition-opacity duration-500 ${
               shouldShowGallery ? 'opacity-100' : 'opacity-0 pointer-events-none'
             }`}
           >
-            <h2 className="text-4xl font-bold text-white mb-12 text-center">Background Gallery</h2>
+            <h2 className="text-4xl font-bold text-gray-900 mb-12 text-center">Background Gallery</h2>
             
             <div className="mb-12 relative mx-auto max-w-6xl">
               <Carousel 
@@ -165,7 +166,7 @@ const MainContent = () => {
                   {backgroundImages.map((image, index) => (
                     <CarouselItem key={index} className="pl-1 sm:basis-1/2 md:basis-1/3 lg:basis-1/4">
                       <div className="p-1">
-                        <Card className="border-0 overflow-hidden">
+                        <Card className="border border-gray-200 overflow-hidden shadow-sm">
                           <CardContent 
                             className="flex aspect-square items-center justify-center p-0 cursor-pointer hover:opacity-90 transition-opacity"
                             onClick={() => openLightbox(image.url, image.description)}
@@ -173,7 +174,7 @@ const MainContent = () => {
                             <div className="relative w-full h-full">
                               {loadingStates[image.url] && (
                                 <div className="absolute inset-0 flex items-center justify-center">
-                                  <Skeleton className="w-full h-full rounded-md" />
+                                  <Skeleton className="w-full h-full rounded-md bg-gray-200" />
                                 </div>
                               )}
                               
@@ -199,16 +200,16 @@ const MainContent = () => {
                   ))}
                 </CarouselContent>
                 <div className="absolute -left-4 top-1/2 -translate-y-1/2">
-                  <CarouselPrevious className="relative left-0" />
+                  <CarouselPrevious className="relative left-0 bg-white text-gray-900 border-gray-200 hover:bg-gray-100" />
                 </div>
                 <div className="absolute -right-4 top-1/2 -translate-y-1/2">
-                  <CarouselNext className="relative right-0" />
+                  <CarouselNext className="relative right-0 bg-white text-gray-900 border-gray-200 hover:bg-gray-100" />
                 </div>
               </Carousel>
             </div>
 
-            <div className="max-w-3xl mx-auto text-white/90">
-              <h3 className="text-3xl font-bold mb-6">My Journey</h3>
+            <div className="max-w-3xl mx-auto text-gray-800">
+              <h3 className="text-3xl font-bold mb-6 text-gray-900">My Journey</h3>
               <p className="mb-4 text-lg">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, diam quis aliquam tincidunt, 
                 nisl nunc fermentum nunc, vitae aliquet nunc nisl eu nunc. Sed euismod, diam quis aliquam tincidunt,
@@ -228,9 +229,9 @@ const MainContent = () => {
             </div>
           </section>
 
-          <section className="min-h-screen bg-black/90 px-6 md:px-12 lg:px-24 py-20">
-            <div className="max-w-3xl mx-auto text-white/90">
-              <h3 className="text-3xl font-bold mb-6">My Experience</h3>
+          <section className="min-h-screen bg-gray-100 px-6 md:px-12 lg:px-24 py-20">
+            <div className="max-w-3xl mx-auto text-gray-800">
+              <h3 className="text-3xl font-bold mb-6 text-gray-900">My Experience</h3>
               <p className="mb-4 text-lg">
                 Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; 
                 Donec velit neque, auctor sit amet aliquam vel, ullamcorper sit amet ligula. Nulla quis 
