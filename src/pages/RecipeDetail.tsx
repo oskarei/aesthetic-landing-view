@@ -46,34 +46,27 @@ const RecipeDetail = () => {
       // Try to parse the JSON string
       const contentJson = JSON.parse(bodyContent);
       
-      // Render the JSON RTE content properly
+      // Simple renderer for JSON RTE content
+      // This is a basic implementation - could be expanded based on the actual structure
       return (
         <div className="prose max-w-none">
           {Array.isArray(contentJson) ? 
             contentJson.map((block: any, idx: number) => {
-              switch (block.type) {
-                case 'paragraph':
-                  return <p key={idx}>{block.children?.map((child: any) => child.text).join('')}</p>;
-                case 'heading-one':
-                  return <h1 key={idx}>{block.children?.map((child: any) => child.text).join('')}</h1>;
-                case 'heading-two':
-                  return <h2 key={idx}>{block.children?.map((child: any) => child.text).join('')}</h2>;
-                case 'heading-three':
-                  return <h3 key={idx}>{block.children?.map((child: any) => child.text).join('')}</h3>;
-                case 'list-item':
-                  return <li key={idx}>{block.children?.map((child: any) => child.text).join('')}</li>;
-                case 'bulleted-list':
-                  return <ul key={idx}>{block.children?.map((child: any, i: number) => 
-                    <li key={i}>{child.children?.map((c: any) => c.text).join('')}</li>)}</ul>;
-                case 'numbered-list':
-                  return <ol key={idx}>{block.children?.map((child: any, i: number) => 
-                    <li key={i}>{child.children?.map((c: any) => c.text).join('')}</li>)}</ol>;
-                case 'code':
-                  return <pre key={idx}><code>{block.children?.map((child: any) => child.text).join('')}</code></pre>;
-                case 'image':
-                  return <img key={idx} src={block.url} alt={block.caption || ''} />;
-                default:
-                  return <div key={idx}>{JSON.stringify(block)}</div>;
+              if (block.type === 'paragraph') {
+                return <p key={idx}>{block.children?.map((child: any) => child.text).join('')}</p>;
+              } else if (block.type === 'heading-one') {
+                return <h1 key={idx}>{block.children?.map((child: any) => child.text).join('')}</h1>;
+              } else if (block.type === 'heading-two') {
+                return <h2 key={idx}>{block.children?.map((child: any) => child.text).join('')}</h2>;
+              } else if (block.type === 'heading-three') {
+                return <h3 key={idx}>{block.children?.map((child: any) => child.text).join('')}</h3>;
+              } else if (block.type === 'list-item') {
+                return <li key={idx}>{block.children?.map((child: any) => child.text).join('')}</li>;
+              } else if (block.type === 'bulleted-list') {
+                return <ul key={idx}>{block.children?.map((child: any, i: number) => 
+                  <li key={i}>{child.children?.map((c: any) => c.text).join('')}</li>)}</ul>;
+              } else {
+                return <div key={idx}>{JSON.stringify(block)}</div>;
               }
             }) :
             <p>{bodyContent}</p>

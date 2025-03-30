@@ -9,5 +9,4 @@ export interface Recipe {
   body: string; // This will be JSON string for RTE content
   image: string;
   slug?: string; // Optional because existing recipes might not have it yet
-  url?: string; // URL from Contentstack
 }

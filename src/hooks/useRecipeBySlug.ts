@@ -17,9 +17,6 @@ const RECIPE_BY_SLUG_QUERY = gql`
           json
         }
         url
-        image {
-          url
-        }
       }
     }
   }
@@ -34,10 +31,9 @@ const transformRecipe = (item: any): Recipe => {
     author: item.author || 'Ótilgreindur höfundur',
     date: item.date || new Date().toISOString(),
     body: item.body?.json ? JSON.stringify(item.body.json) : '',
-    taxonomy: [], // Empty array since taxonomy field isn't available
-    image: item.image?.url || '/placeholder.svg',
-    slug: createRecipeSlug(item.title),
-    url: item.url
+    taxonomy: [], // Empty array since we're skipping taxonomy for now
+    image: '/placeholder.svg', // Using placeholder as image field was not in the schema
+    slug: createRecipeSlug(item.title)
   };
 };
 
@@ -54,14 +50,12 @@ export const useRecipeBySlug = (slug: string) => {
     }
 
     if (queryError) {
-      console.error('GraphQL error:', queryError);
       setError('Failed to fetch recipes');
       setLoading(false);
       return;
     }
 
     if (data && slug) {
-      console.log('Contentstack data:', data);
       // Find the recipe with matching slug (derived from title)
       const items = data.all_recipe?.items || [];
       const foundItem = items.find((item: any) => 
