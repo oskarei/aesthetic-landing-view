@@ -99,7 +99,7 @@ const MainContent = () => {
             ref={aboutRef}
             shouldShowAbout={shouldShowAbout}
             title={homeContent?.title}
-            aboutInfo={homeContent?.bio}
+            aboutInfo={homeContent?.description?.json ? undefined : homeContent?.description}
             about_the_site={homeContent?.about_the_site}
           />
         </div>
