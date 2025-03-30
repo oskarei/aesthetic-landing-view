@@ -104,7 +104,7 @@ const MainContent = () => {
                 <div className="h-24 bg-white/20 rounded w-full"></div>
               </div>
             ) : (
-              <>
+              <div className="w-full max-w-4xl">
                 <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-4 leading-tight">
                   {homeContent?.header}
                 </h1>
@@ -127,7 +127,7 @@ const MainContent = () => {
                     strokeWidth={2.5}
                   />
                 </div>
-              </>
+              </div>
             )}
           </section>
 
