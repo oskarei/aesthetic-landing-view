@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import ContactSheet from "./ContactSheet";
 import { useHomeContent } from "@/hooks/useHomeContent";
@@ -8,6 +8,7 @@ import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext
 import { Card, CardContent } from "@/components/ui/card";
 import { useInView } from "react-intersection-observer";
 import { ArrowDown } from "lucide-react";
+import LightboxDialog from "./LightboxDialog";
 
 const MainContent = () => {
   const [isContactOpen, setIsContactOpen] = useState(false);
@@ -15,6 +16,10 @@ const MainContent = () => {
   const [contactButtonText, setContactButtonText] = useState("Get in Touch");
   const [backgroundVisible, setBackgroundVisible] = useState(true);
   const [backgroundImages, setBackgroundImages] = useState<string[]>([]);
+  
+  // State for lightbox
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+  const [currentImage, setCurrentImage] = useState<string | null>(null);
   
   // Use intersection observer for the hero section
   const { ref: heroRef, inView: heroInView } = useInView({
@@ -54,6 +59,18 @@ const MainContent = () => {
 
   // Determine if gallery should be visible
   const shouldShowGallery = !heroIsVisible;
+
+  // Function to open the lightbox with a specific image
+  const openLightbox = (imageUrl: string) => {
+    setCurrentImage(imageUrl);
+    setIsLightboxOpen(true);
+  };
+
+  // Function to close the lightbox
+  const closeLightbox = () => {
+    setIsLightboxOpen(false);
+    setCurrentImage(null);
+  };
 
   return (
     <div className="relative z-10 min-h-screen flex flex-col">
@@ -134,7 +151,10 @@ const MainContent = () => {
                     <CarouselItem key={index} className="pl-1 sm:basis-1/2 md:basis-1/3 lg:basis-1/4">
                       <div className="p-1">
                         <Card className="border-0 overflow-hidden">
-                          <CardContent className="flex aspect-square items-center justify-center p-0">
+                          <CardContent 
+                            className="flex aspect-square items-center justify-center p-0 cursor-pointer hover:opacity-90 transition-opacity"
+                            onClick={() => openLightbox(image)}
+                          >
                             <img
                               src={image}
                               alt={`Background ${index + 1}`}
@@ -212,6 +232,13 @@ const MainContent = () => {
       <ContactSheet 
         isOpen={isContactOpen} 
         onClose={() => setIsContactOpen(false)} 
+      />
+
+      {/* Lightbox Dialog */}
+      <LightboxDialog 
+        isOpen={isLightboxOpen} 
+        onClose={closeLightbox} 
+        imageUrl={currentImage} 
       />
     </div>
   );
