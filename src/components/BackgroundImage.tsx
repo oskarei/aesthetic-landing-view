@@ -21,40 +21,53 @@ const BackgroundImage = () => {
     }
   }, [homeContent, loading]);
 
-  // Function to select a random background image
+  // Function to select a random background image that's different from the current one
   const selectRandomBackground = (images: string[]) => {
-    if (images.length) {
-      const randomIndex = Math.floor(Math.random() * images.length);
-      setBackgroundImage(images[randomIndex]);
-      console.log("Images shuffled:", randomIndex);
+    if (images.length > 1) {
+      let newIndex;
+      const currentImage = backgroundImage;
+      
+      // Make sure we select a different image than the current one
+      do {
+        newIndex = Math.floor(Math.random() * images.length);
+      } while (images[newIndex] === currentImage && images.length > 1);
+      
+      setBackgroundImage(images[newIndex]);
+      console.log("Background changed to index:", newIndex);
+    } else if (images.length === 1) {
+      setBackgroundImage(images[0]);
+      console.log("Only one background image available");
     }
   };
 
   // Add scroll event listener to change background when scrolling back to top
   useEffect(() => {
-    // We need to listen to the scroll event on the document
     const handleScroll = () => {
       const currentScrollPos = window.scrollY;
       
-      // If we're scrolling back up and near the top (within 100px of the top)
-      if (prevScrollPos > currentScrollPos && currentScrollPos < 100) {
-        // Only change the background if we're coming from a scrolled position (more than 200px down)
-        if (prevScrollPos > 200) {
+      // If we're scrolling up and within the top section of the page
+      if (prevScrollPos > currentScrollPos && currentScrollPos < 200) {
+        // Only change if we've scrolled a significant amount and now going back up
+        if (prevScrollPos - currentScrollPos > 50) {
           const imagesToUse = contentBackgroundUrls.length ? contentBackgroundUrls : backgroundImages;
           selectRandomBackground(imagesToUse);
-          console.log("Changing background image on scroll to top");
+          console.log("Changing background - scroll position:", currentScrollPos, "prev:", prevScrollPos);
         }
       }
       
       setPrevScrollPos(currentScrollPos);
     };
 
-    // Add the event listener to the document
+    // Use both document and window for better coverage
     document.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('scroll', handleScroll, { passive: true });
     
     // Clean up
-    return () => document.removeEventListener('scroll', handleScroll);
-  }, [prevScrollPos, contentBackgroundUrls]);
+    return () => {
+      document.removeEventListener('scroll', handleScroll);
+      window.addEventListener('scroll', handleScroll);
+    };
+  }, [prevScrollPos, contentBackgroundUrls, backgroundImage]); // Add backgroundImage as a dependency
 
   if (!backgroundImage) {
     return null;
