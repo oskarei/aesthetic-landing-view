@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { useInView } from "react-intersection-observer";
@@ -67,10 +66,8 @@ const HeroSection = ({
       console.log('Easter egg activated! Clicked on the last character:', lastChar);
       
       if (rootRef.current) {
-        rootRef.current.classList.remove('rotate-full');
-        // Force a reflow so the animation can be triggered again
-        void rootRef.current.offsetWidth;
-        rootRef.current.classList.add('rotate-full');
+        // Toggle the rotate-full class instead of removing and re-adding it
+        rootRef.current.classList.toggle('rotate-full');
       }
     }
   };

@@ -85,7 +85,8 @@
   }
   
   .rotate-full {
-    animation: rotate-full 1s ease-in-out;
+    transform: rotate(180deg);
+    transition: transform 1s ease-in-out;
   }
   
   @keyframes rotate-full {
