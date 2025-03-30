@@ -15,6 +15,7 @@ const LightboxDialog = ({ isOpen, onClose, imageUrl, caption }: LightboxDialogPr
   const [loading, setLoading] = useState(true);
   const [optimizedImageUrl, setOptimizedImageUrl] = useState<string | null>(null);
   const [placeholderUrl, setPlaceholderUrl] = useState<string | null>(null);
+  const [thumbnailUrl, setThumbnailUrl] = useState<string | null>(null);
   const [zoomLevel, setZoomLevel] = useState(1);
 
   // Generate optimized image URLs using Contentstack's Image Delivery API
@@ -23,6 +24,10 @@ const LightboxDialog = ({ isOpen, onClose, imageUrl, caption }: LightboxDialogPr
       // Create a placeholder blurred version (50x50)
       const blurredPlaceholder = `${imageUrl}?quality=10&width=50&height=50&blur=30`;
       setPlaceholderUrl(blurredPlaceholder);
+      
+      // Create a medium-sized thumbnail for immediate display (600px wide)
+      const thumbnail = `${imageUrl}?quality=60&width=600`;
+      setThumbnailUrl(thumbnail);
       
       // Create an optimized full-size version
       // Using width=1600 as a reasonable max size for most screens
@@ -36,6 +41,7 @@ const LightboxDialog = ({ isOpen, onClose, imageUrl, caption }: LightboxDialogPr
     } else {
       setOptimizedImageUrl(null);
       setPlaceholderUrl(null);
+      setThumbnailUrl(null);
     }
   }, [imageUrl]);
 
@@ -72,9 +78,9 @@ const LightboxDialog = ({ isOpen, onClose, imageUrl, caption }: LightboxDialogPr
         <DialogTitle className="sr-only">Image Preview</DialogTitle>
         
         <div className="relative w-full h-full flex flex-col items-center justify-center">
-          {optimizedImageUrl && (
+          {(optimizedImageUrl || thumbnailUrl) && (
             <div className="relative overflow-hidden flex-1">
-              {/* Blurred small placeholder shown during loading */}
+              {/* Blurred small placeholder shown while thumbnail loads */}
               {loading && placeholderUrl && (
                 <div className="absolute inset-0 w-full h-full flex items-center justify-center">
                   <img
@@ -84,6 +90,16 @@ const LightboxDialog = ({ isOpen, onClose, imageUrl, caption }: LightboxDialogPr
                   />
                   <Skeleton className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/20" />
                 </div>
+              )}
+              
+              {/* Medium resolution thumbnail shown while high-res image loads */}
+              {loading && thumbnailUrl && (
+                <img
+                  src={thumbnailUrl}
+                  alt="Loading preview"
+                  className="max-w-full max-h-[80vh] object-contain transition-opacity duration-300"
+                  style={{ transform: `scale(${zoomLevel})` }}
+                />
               )}
               
               {/* Main optimized image */}
