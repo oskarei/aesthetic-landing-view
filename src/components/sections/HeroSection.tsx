@@ -28,6 +28,7 @@ const HeroSection = ({
   });
   
   const rootRef = useRef<HTMLElement | null>(null);
+  const [isRotated, setIsRotated] = useState(false);
   
   useEffect(() => {
     rootRef.current = document.getElementById('root');
@@ -35,6 +36,7 @@ const HeroSection = ({
     // Check if the site is rotated on load and reset it
     if (rootRef.current && rootRef.current.classList.contains('rotate-full')) {
       rootRef.current.classList.remove('rotate-full');
+      setIsRotated(false);
     }
   }, []);
   
@@ -62,17 +64,26 @@ const HeroSection = ({
     const textWidth = tempSpan.getBoundingClientRect().width;
     document.body.removeChild(tempSpan);
     
-    // Check if click is on the last character
+    // Check if click is on the last character when normal, or first character when upside down
     const lastCharWidth = rect.width - textWidth;
-    const isLastCharClicked = x > textWidth && x <= rect.width;
+    let isTargetCharClicked = false;
     
-    console.log('Click position:', x, 'Text width:', textWidth, 'Element width:', rect.width);
+    if (!isRotated) {
+      // When in normal position, check for click on last character
+      isTargetCharClicked = x > textWidth && x <= rect.width;
+    } else {
+      // When upside down, check for click on first character (which appears on the right)
+      isTargetCharClicked = x >= 0 && x < (rect.width - textWidth);
+    }
     
-    if (isLastCharClicked && rootRef.current) {
-      console.log('Easter egg activated! Clicked on the last character:', lastChar);
+    console.log('Click position:', x, 'Text width:', textWidth, 'Element width:', rect.width, 'Is rotated:', isRotated);
+    
+    if (isTargetCharClicked && rootRef.current) {
+      console.log('Easter egg activated! Clicked on the target character');
       
       // Toggle the rotate-full class to flip the site 180 degrees or back to normal
       rootRef.current.classList.toggle('rotate-full');
+      setIsRotated(!isRotated);
       console.log('Rotation toggled:', rootRef.current.classList.contains('rotate-full'));
     }
   };
