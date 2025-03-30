@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { useInView } from "react-intersection-observer";
 import { ArrowDown } from "lucide-react";
@@ -11,6 +11,7 @@ interface HeroSectionProps {
   contactButtonText: string;
   setIsContactOpen: (isOpen: boolean) => void;
   contactButtonRef: (element: HTMLDivElement | null) => void;
+  scrollToGallery: () => void;
 }
 
 const HeroSection = ({ 
@@ -18,7 +19,8 @@ const HeroSection = ({
   homeContent, 
   contactButtonText, 
   setIsContactOpen,
-  contactButtonRef
+  contactButtonRef,
+  scrollToGallery
 }: HeroSectionProps) => {
   const { ref: heroRef, inView: heroInView } = useInView({
     threshold: 0.2,
@@ -58,11 +60,17 @@ const HeroSection = ({
             </div>
             <div className="flex justify-center w-full">
               <div className="flex justify-center w-full absolute left-0 right-0">
-                <ArrowDown 
-                  className="animate-bounce text-white" 
-                  size={32}
-                  strokeWidth={2.5}
-                />
+                <button 
+                  onClick={scrollToGallery}
+                  className="bg-transparent border-none cursor-pointer transition-transform hover:translate-y-1 focus:outline-none"
+                  aria-label="Scroll to gallery"
+                >
+                  <ArrowDown 
+                    className="animate-bounce text-white" 
+                    size={32}
+                    strokeWidth={2.5}
+                  />
+                </button>
               </div>
             </div>
           </div>

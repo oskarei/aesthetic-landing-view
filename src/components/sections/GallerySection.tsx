@@ -1,4 +1,5 @@
 
+import React, { forwardRef } from "react";
 import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from "@/components/ui/carousel";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -14,7 +15,7 @@ interface GallerySectionProps {
   backgroundInfo?: string;
 }
 
-const GallerySection = ({
+const GallerySection = forwardRef<HTMLElement, GallerySectionProps>(({
   backgroundImages,
   loadingStates,
   handleImageLoaded,
@@ -23,9 +24,10 @@ const GallerySection = ({
   shouldShowGallery,
   sectionHeadline = "Background Gallery",
   backgroundInfo
-}: GallerySectionProps) => {
+}, ref) => {
   return (
     <section 
+      ref={ref}
       className={`min-h-screen bg-white px-6 md:px-12 lg:px-24 py-20 transition-opacity duration-500 ${
         shouldShowGallery ? 'opacity-100' : 'opacity-0 pointer-events-none'
       }`}
@@ -113,6 +115,8 @@ const GallerySection = ({
       </div>
     </section>
   );
-};
+});
+
+GallerySection.displayName = "GallerySection";
 
 export default GallerySection;

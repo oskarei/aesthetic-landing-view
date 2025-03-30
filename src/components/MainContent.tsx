@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from "react";
 import ContactSheet from "./ContactSheet";
 import { useHomeContent } from "@/hooks/useHomeContent";
@@ -21,6 +22,8 @@ const MainContent = () => {
   const [loadingStates, setLoadingStates] = useState<{[key: string]: boolean}>({});
   
   const contactButtonRef = useRef<HTMLDivElement>(null);
+  const galleryRef = useRef<HTMLElement>(null);
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
   
   const { ref: contactButtonInViewRef, inView: contactButtonInView } = useInView({
     threshold: 0.2,
@@ -66,6 +69,17 @@ const MainContent = () => {
 
   const shouldShowGallery = !contactButtonInView;
 
+  const scrollToGallery = () => {
+    if (galleryRef.current && scrollAreaRef.current) {
+      const scrollTop = galleryRef.current.offsetTop;
+      
+      scrollAreaRef.current.scrollTo({
+        top: scrollTop,
+        behavior: 'smooth'
+      });
+    }
+  };
+
   const openLightbox = (imageUrl: string, caption?: string) => {
     setCurrentImage(imageUrl);
     setCurrentCaption(caption || null);
@@ -98,7 +112,7 @@ const MainContent = () => {
         {/* ThemeToggle removed */}
       </header>
 
-      <ScrollArea className="flex-1 h-[calc(100vh-4rem)]">
+      <ScrollArea ref={scrollAreaRef} className="flex-1 h-[calc(100vh-4rem)]">
         <div className="flex flex-col">
           <HeroSection 
             loading={loading}
@@ -106,9 +120,11 @@ const MainContent = () => {
             contactButtonText={contactButtonText}
             setIsContactOpen={setIsContactOpen}
             contactButtonRef={setContactButtonRef}
+            scrollToGallery={scrollToGallery}
           />
 
           <GallerySection
+            ref={galleryRef}
             backgroundImages={backgroundImages}
             loadingStates={loadingStates}
             handleImageLoaded={handleImageLoaded}
