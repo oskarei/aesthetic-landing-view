@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -115,7 +116,7 @@ body {
 /* Custom styling for bullet lists */
 @layer components {
   .rich-text-content ul {
-    @apply space-y-2 my-4 ml-1;
+    @apply space-y-2 my-4 ml-1 list-none;
   }
   
   .rich-text-content li {
@@ -133,11 +134,19 @@ body {
 
   /* Add styling for the prose class for bullet lists */
   .prose ul {
-    @apply list-disc pl-6 my-4 space-y-2;
+    @apply list-none pl-6 my-4 space-y-2;
   }
   
   .prose ol {
-    @apply list-decimal pl-6 my-4 space-y-2;
+    @apply list-none pl-6 my-4 space-y-2 counter-reset-[item];
+  }
+  
+  .prose ol > li {
+    @apply relative pl-6 before:absolute before:left-0 before:content-[counter(item)'.'] before:counter-increment-[item] before:text-gray-500 before:font-medium;
+  }
+  
+  .prose ul > li {
+    @apply relative pl-6 before:absolute before:left-0 before:top-2.5 before:h-2 before:w-2 before:rounded-full before:bg-gray-500 before:content-[''];
   }
   
   .prose li {
@@ -151,7 +160,7 @@ body {
 
   /* Nested lists styling in prose */
   .prose ul ul {
-    @apply list-disc ml-4;
+    @apply list-none ml-4;
   }
   
   .prose ol ol {
@@ -160,6 +169,6 @@ body {
   
   .prose ul ol,
   .prose ol ul {
-    @apply my-1 ml-4;
+    @apply my-1 ml-4 list-none;
   }
 }
