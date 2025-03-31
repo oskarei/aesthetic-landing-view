@@ -43,6 +43,7 @@ const RecipeDetail = () => {
     try {
       const contentJson = JSON.parse(bodyContent);
       const htmlContent = jsonToHtml(contentJson);
+      // Add specific classes to enhance the ordered list rendering
       return <div className="prose prose-lg max-w-none rich-text-content" dangerouslySetInnerHTML={{ __html: htmlContent }} />;
     } catch (e) {
       return (
