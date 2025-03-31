@@ -5,6 +5,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
+import PingPong from "./PingPong";
 
 type NavItemProps = {
   label: string;
@@ -77,6 +78,10 @@ const HamburgerMenu = ({ scrollToGallery, scrollToAbout }: HamburgerMenuProps) =
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const goToRecipes = () => {
+    navigate('/matur');
+  };
+
   return (
     <div className="fixed top-5 right-5 z-30">
       <Button
@@ -110,7 +115,7 @@ const HamburgerMenu = ({ scrollToGallery, scrollToAbout }: HamburgerMenuProps) =
               </Button>
             </div>
             
-            <div className="px-8 py-12">
+            <div className="px-8 py-6">
               <motion.ul className="flex flex-col space-y-2">
                 <NavItem 
                   label="To the Top!" 
@@ -127,7 +132,16 @@ const HamburgerMenu = ({ scrollToGallery, scrollToAbout }: HamburgerMenuProps) =
                   onClick={() => handleNavigation(scrollToAbout)}
                   active={false}
                 />
+                <NavItem 
+                  label="Recipes (in Icelandic)" 
+                  onClick={() => handleNavigation(goToRecipes)}
+                  active={location.pathname === '/matur'}
+                />
               </motion.ul>
+              
+              <div className="mt-8 border-t pt-8">
+                <PingPong />
+              </div>
             </div>
           </motion.div>
         )}

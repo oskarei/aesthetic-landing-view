@@ -97,6 +97,24 @@
       transform: rotate(360deg);
     }
   }
+  
+  .animate-fade-in {
+    animation: fade-in 0.2s ease-in forwards;
+  }
+  
+  .animate-fade-out {
+    animation: fade-out 0.2s ease-out forwards;
+  }
+  
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 0.5; }
+  }
+  
+  @keyframes fade-out {
+    from { opacity: 0.5; }
+    to { opacity: 0; }
+  }
 }
 
 /* Default to Inter font as fallback until Helmet Neue loads */
@@ -116,7 +134,7 @@ body {
 /* Custom styling for bullet lists */
 @layer components {
   .rich-text-content ul {
-    @apply space-y-2 my-4 ml-1;
+    @apply space-y-2 my-4 ml-1 list-none;
   }
   
   .rich-text-content li {
@@ -130,5 +148,61 @@ body {
   
   .rich-text-content ul ul li {
     @apply before:bg-gray-400 before:h-1.5 before:w-1.5 before:top-3;
+  }
+
+  /* Add styling for the prose class for bullet lists */
+  .prose ul {
+    @apply list-none pl-6 my-4 space-y-2;
+  }
+  
+  .prose ol {
+    @apply list-decimal pl-6 my-4 space-y-2;
+    counter-reset: list-counter;
+  }
+  
+  .prose ol > li {
+    @apply relative pl-6;
+    counter-increment: list-counter;
+  }
+  
+  .prose ol > li::before {
+    content: counter(list-counter) ".";
+    @apply absolute left-0 text-gray-500 font-medium;
+  }
+  
+  .prose ul > li {
+    @apply relative pl-6 before:absolute before:left-0 before:top-2.5 before:h-2 before:w-2 before:rounded-full before:bg-gray-500 before:content-[''];
+  }
+  
+  .prose li {
+    @apply mb-1;
+  }
+  
+  .prose li > ul,
+  .prose li > ol {
+    @apply my-1 ml-4;
+  }
+
+  /* Nested lists styling in prose */
+  .prose ul ul {
+    @apply list-none ml-4;
+  }
+  
+  .prose ol ol {
+    @apply ml-4;
+    counter-reset: nested-counter;
+  }
+  
+  .prose ol ol > li {
+    counter-increment: nested-counter;
+  }
+  
+  .prose ol ol > li::before {
+    content: counter(nested-counter, lower-alpha) ".";
+  }
+  
+  .prose ul ol,
+  .prose ol ul {
+    @apply my-1 ml-4;
   }
 }
