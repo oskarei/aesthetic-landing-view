@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -141,7 +142,13 @@ body {
   }
   
   .prose ol > li {
-    @apply relative pl-6 before:absolute before:left-0 before:content-[counter(list-item)'.'] before:text-gray-500 before:font-medium;
+    @apply relative pl-6;
+    counter-increment: list-item;
+  }
+  
+  .prose ol > li::before {
+    @apply absolute left-0 text-gray-500 font-medium;
+    content: counter(list-item) ".";
   }
   
   .prose ul > li {
@@ -163,7 +170,11 @@ body {
   }
   
   .prose ol ol {
-    @apply list-[lower-alpha];
+    @apply list-none ml-4;
+  }
+  
+  .prose ol ol > li::before {
+    content: counter(list-item, lower-alpha) ".";
   }
   
   .prose ul ol,
