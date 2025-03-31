@@ -137,16 +137,18 @@ body {
   }
   
   .prose ol {
-    @apply list-none pl-6 my-4 space-y-2;
+    @apply list-decimal pl-6 my-4 space-y-2;
+    counter-reset: list-counter;
   }
   
   .prose ol > li {
     @apply relative pl-6;
+    counter-increment: list-counter;
   }
   
   .prose ol > li::before {
-    @apply absolute left-0 text-gray-500 font-medium;
     content: counter(list-counter) ".";
+    @apply absolute left-0 text-gray-500 font-medium;
   }
   
   .prose ul > li {
@@ -167,25 +169,21 @@ body {
     @apply list-none ml-4;
   }
   
-  .prose ol {
-    counter-reset: list-counter;
-  }
-  
-  .prose ol > li {
-    counter-increment: list-counter;
-  }
-  
   .prose ol ol {
-    @apply list-none ml-4;
-    counter-reset: list-counter;
+    @apply ml-4;
+    counter-reset: nested-counter;
+  }
+  
+  .prose ol ol > li {
+    counter-increment: nested-counter;
   }
   
   .prose ol ol > li::before {
-    content: counter(list-counter, lower-alpha) ".";
+    content: counter(nested-counter, lower-alpha) ".";
   }
   
   .prose ul ol,
   .prose ol ul {
-    @apply my-1 ml-4 list-none;
+    @apply my-1 ml-4;
   }
 }
