@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -138,11 +137,11 @@ body {
   }
   
   .prose ol {
-    @apply list-none pl-6 my-4 space-y-2 counter-reset-[item];
+    @apply list-none pl-6 my-4 space-y-2;
   }
   
   .prose ol > li {
-    @apply relative pl-6 before:absolute before:left-0 before:content-[counter(item)'.'] before:counter-increment-[item] before:text-gray-500 before:font-medium;
+    @apply relative pl-6 before:absolute before:left-0 before:content-[counter(list-item)'.'] before:text-gray-500 before:font-medium;
   }
   
   .prose ul > li {
