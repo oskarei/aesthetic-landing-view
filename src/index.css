@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -95,6 +96,24 @@
     to {
       transform: rotate(360deg);
     }
+  }
+  
+  .animate-fade-in {
+    animation: fade-in 0.2s ease-in forwards;
+  }
+  
+  .animate-fade-out {
+    animation: fade-out 0.2s ease-out forwards;
+  }
+  
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 0.5; }
+  }
+  
+  @keyframes fade-out {
+    from { opacity: 0.5; }
+    to { opacity: 0; }
   }
 }
 
