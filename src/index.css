@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -138,7 +137,11 @@ body {
   }
   
   .rich-text-content li {
-    @apply relative pl-6 before:absolute before:left-0 before:top-2.5 before:h-2 before:w-2 before:rounded-full before:bg-gray-500 before:content-[''];
+    @apply relative pl-6;
+  }
+  
+  .rich-text-content ul li {
+    @apply before:absolute before:left-0 before:top-2.5 before:h-2 before:w-2 before:rounded-full before:bg-gray-500 before:content-[''];
   }
   
   /* Nested lists styling */
