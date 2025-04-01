@@ -28,13 +28,16 @@ const RecipesPage = () => {
   const scrollToAbout = () => {};
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="p-6 flex justify-end sticky top-0 z-20">
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
+      <header className="p-6 flex justify-end sticky top-0 z-20 bg-white/80 backdrop-blur border-b border-gray-100 shadow-sm">
         <HamburgerMenu scrollToGallery={scrollToGallery} scrollToAbout={scrollToAbout} />
       </header>
       
       <div className="container max-w-4xl mx-auto px-4 py-8">
-        <h1 className="text-4xl font-bold mb-8 text-center">Uppskriftir</h1>
+        <div className="bg-white shadow-md rounded-xl p-6 mb-8">
+          <h1 className="text-4xl font-bold mb-3 text-center text-gray-800">Uppskriftir</h1>
+          <div className="h-1 w-24 bg-gradient-to-r from-gray-200 to-gray-300 mx-auto rounded-full"></div>
+        </div>
         
         <div className="space-y-8">
           {recipes.map((recipe) => (
@@ -58,7 +61,9 @@ const RecipesPage = () => {
           )}
           
           {!hasMore && recipes.length > 0 && (
-            <p className="text-center text-gray-500 my-8">Engar fleiri uppskriftir</p>
+            <p className="text-center text-gray-500 my-8 p-4 bg-white rounded-lg shadow-sm border border-gray-100">
+              Engar fleiri uppskriftir
+            </p>
           )}
         </div>
       </div>
