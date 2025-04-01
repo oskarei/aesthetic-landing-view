@@ -50,7 +50,8 @@ const HamburgerMenu = ({ scrollToGallery, scrollToAbout }: HamburgerMenuProps) =
     setIsOpen(!isOpen);
   };
 
-  const handleNavigation = (action: () => void, needsHomeRedirect = false) => {
+  // Updated the type of needsHomeRedirect to accept a string or false
+  const handleNavigation = (action: () => void, needsHomeRedirect: string | false = false) => {
     // Apply fade effect by adding a temporary overlay
     const overlay = document.createElement('div');
     overlay.className = 'fixed inset-0 bg-black z-50 animate-fade-in';
