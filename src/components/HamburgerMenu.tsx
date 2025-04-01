@@ -50,7 +50,6 @@ const HamburgerMenu = ({ scrollToGallery, scrollToAbout }: HamburgerMenuProps) =
     setIsOpen(!isOpen);
   };
 
-  // Updated the type of needsHomeRedirect to accept a string or false
   const handleNavigation = (action: () => void, needsHomeRedirect: string | false = false) => {
     // Apply fade effect by adding a temporary overlay
     const overlay = document.createElement('div');
@@ -111,7 +110,7 @@ const HamburgerMenu = ({ scrollToGallery, scrollToAbout }: HamburgerMenuProps) =
   };
 
   return (
-    <div className="fixed top-5 right-5 z-30">
+    <div className="fixed top-5 right-5 z-40">
       <Button
         variant="ghost"
         size="icon"
@@ -129,7 +128,7 @@ const HamburgerMenu = ({ scrollToGallery, scrollToAbout }: HamburgerMenuProps) =
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: "100%" }}
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            className="fixed top-0 right-0 w-full sm:w-96 h-full bg-white shadow-lg z-50 overflow-y-auto"
+            className="fixed top-0 right-0 w-full sm:w-96 h-screen bg-white shadow-lg z-50 overflow-y-auto"
           >
             <div className="flex justify-end p-5">
               <Button
