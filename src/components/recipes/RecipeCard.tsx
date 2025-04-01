@@ -15,24 +15,28 @@ interface RecipeCardProps {
 const RecipeCard: React.FC<RecipeCardProps> = ({ recipe }) => {
   const formattedDate = format(new Date(recipe.date), 'MMMM d, yyyy');
   
-  // Function to get a plain text preview from RTE JSON content
-  const getTextPreview = (bodyContent: string, maxLength: number = 300) => {
+  // Function to get the full text content from RTE JSON, excluding images and media
+  const getBodyContent = (bodyContent: string) => {
     try {
       // Try to parse the JSON string
       const contentJson = JSON.parse(bodyContent);
       
-      // First try to use the serializer to get HTML and then extract text
+      // First try to use the serializer to get HTML
       const htmlContent = jsonToHtml(contentJson);
       
-      // Create a temporary div to extract text from HTML
+      // Create a temporary div to extract text and remove images
       const tempDiv = document.createElement('div');
       tempDiv.innerHTML = htmlContent;
-      const plainText = tempDiv.textContent || tempDiv.innerText || '';
       
-      return plainText.slice(0, maxLength) + (plainText.length > maxLength ? '...' : '');
+      // Remove all image elements and figure captions
+      const images = tempDiv.querySelectorAll('img, figure, figcaption');
+      images.forEach(img => img.remove());
+      
+      // Get the remaining text content
+      return tempDiv.innerHTML;
     } catch (e) {
       // Fallback to the original string if not valid JSON
-      return bodyContent.slice(0, maxLength) + (bodyContent.length > maxLength ? '...' : '');
+      return bodyContent;
     }
   };
   
@@ -67,7 +71,11 @@ const RecipeCard: React.FC<RecipeCardProps> = ({ recipe }) => {
           </div>
         </div>
         <div className="prose max-w-none">
-          <p className="font-medium text-gray-700">{getTextPreview(recipe.body, 100)}</p>
+          {/* Display the full recipe body content without images and captions */}
+          <div 
+            className="font-medium text-gray-700"
+            dangerouslySetInnerHTML={{ __html: getBodyContent(recipe.body) }}
+          />
           <div className="mt-4 text-right">
             <Link 
               to={recipe.id} 
