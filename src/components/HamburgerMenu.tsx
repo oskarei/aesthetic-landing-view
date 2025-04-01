@@ -50,7 +50,7 @@ const HamburgerMenu = ({ scrollToGallery, scrollToAbout }: HamburgerMenuProps) =
     setIsOpen(!isOpen);
   };
 
-  const handleNavigation = (action: () => void) => {
+  const handleNavigation = (action: () => void, needsHomeRedirect = false) => {
     // Apply fade effect by adding a temporary overlay
     const overlay = document.createElement('div');
     overlay.className = 'fixed inset-0 bg-black z-50 animate-fade-in';
@@ -61,7 +61,14 @@ const HamburgerMenu = ({ scrollToGallery, scrollToAbout }: HamburgerMenuProps) =
     
     // Wait for fade-in animation before navigation
     setTimeout(() => {
-      action();
+      if (needsHomeRedirect && location.pathname !== '/') {
+        // If we need to redirect to home first (for gallery and about sections)
+        navigate('/', { state: { scrollTarget: needsHomeRedirect } });
+        // After navigation completes, the home page will handle scrolling based on state
+      } else {
+        // Regular navigation or scrolling if already on home page
+        action();
+      }
       
       // Remove overlay with fade-out animation
       overlay.classList.replace('animate-fade-in', 'animate-fade-out');
@@ -80,6 +87,26 @@ const HamburgerMenu = ({ scrollToGallery, scrollToAbout }: HamburgerMenuProps) =
 
   const goToRecipes = () => {
     navigate('/matur');
+  };
+
+  const handleGalleryClick = () => {
+    if (location.pathname === '/') {
+      // If already on home page, just scroll
+      scrollToGallery();
+    } else {
+      // Navigate home with instruction to scroll to gallery
+      handleNavigation(() => {}, 'gallery');
+    }
+  };
+
+  const handleAboutClick = () => {
+    if (location.pathname === '/') {
+      // If already on home page, just scroll
+      scrollToAbout();
+    } else {
+      // Navigate home with instruction to scroll to about
+      handleNavigation(() => {}, 'about');
+    }
   };
 
   return (
@@ -124,12 +151,12 @@ const HamburgerMenu = ({ scrollToGallery, scrollToAbout }: HamburgerMenuProps) =
                 />
                 <NavItem 
                   label="Gallery" 
-                  onClick={() => handleNavigation(scrollToGallery)}
+                  onClick={handleGalleryClick}
                   active={false}
                 />
                 <NavItem 
                   label="About" 
-                  onClick={() => handleNavigation(scrollToAbout)}
+                  onClick={handleAboutClick}
                   active={false}
                 />
                 <NavItem 

@@ -4,6 +4,7 @@ import { useRecipes } from '@/hooks/useRecipes';
 import RecipeCard from '@/components/recipes/RecipeCard';
 import { Skeleton } from '@/components/ui/skeleton';
 import HamburgerMenu from '@/components/HamburgerMenu';
+import { useNavigate } from 'react-router-dom';
 
 const LoadingSkeleton = () => (
   <div className="space-y-6">
@@ -22,10 +23,16 @@ const LoadingSkeleton = () => (
 
 const RecipesPage = () => {
   const { recipes, loading, hasMore, loadMoreRef } = useRecipes();
+  const navigate = useNavigate();
 
-  // Create empty scroll functions as placeholders that match the HamburgerMenu props
-  const scrollToGallery = () => {};
-  const scrollToAbout = () => {};
+  // These functions will now navigate to the home page with instructions to scroll
+  const scrollToGallery = () => {
+    navigate('/', { state: { scrollTarget: 'gallery' } });
+  };
+  
+  const scrollToAbout = () => {
+    navigate('/', { state: { scrollTarget: 'about' } });
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
