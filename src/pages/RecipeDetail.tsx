@@ -72,8 +72,8 @@ const RecipeDetail = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 flex items-center justify-center">
-        <div className="text-center bg-white/80 backdrop-blur-sm p-8 rounded-xl shadow-md">
+      <div className="min-h-screen bg-gradient-to-b from-[#F9F5F2] to-[#F3EBE6] flex items-center justify-center">
+        <div className="text-center bg-white/90 backdrop-blur-sm p-8 rounded-xl shadow-md border border-[#E9DFD8]">
           <h1 className="text-2xl font-bold text-red-500">Villa kom upp</h1>
           <p className="mt-2">Uppskriftin fannst ekki.</p>
           <Button onClick={goBack} className="mt-4" variant="outline">
@@ -86,12 +86,18 @@ const RecipeDetail = () => {
   }
 
   return (
-    <div className={`min-h-screen ${darkMode ? 'bg-gray-900 text-gray-100' : 'bg-gradient-to-b from-gray-50 to-gray-100 text-gray-800'} transition-colors duration-300`}>
-      <header className={`p-6 flex justify-between sticky top-0 z-20 ${darkMode ? 'bg-gray-900/80' : 'bg-white/80'} backdrop-blur border-b border-gray-200 shadow-sm transition-colors duration-300`}>
+    <div className={`min-h-screen ${darkMode 
+      ? 'bg-gradient-to-b from-gray-900 to-gray-800 text-gray-100' 
+      : 'bg-gradient-to-b from-[#F9F5F2] to-[#F3EBE6] text-gray-800'} transition-colors duration-300`}>
+      <header className={`p-6 flex justify-between sticky top-0 z-20 ${darkMode 
+        ? 'bg-gray-900/90' 
+        : 'bg-white/90'} backdrop-blur border-b ${darkMode ? 'border-gray-700' : 'border-gray-200'} shadow-sm transition-colors duration-300`}>
         <Button 
           variant="outline" 
           onClick={goBack} 
-          className={`flex items-center gap-2 ${darkMode ? 'hover:bg-gray-800 border-gray-700' : 'hover:bg-gray-100'} transition-colors`}
+          className={`flex items-center gap-2 ${darkMode 
+            ? 'hover:bg-gray-800 border-gray-700' 
+            : 'hover:bg-[#F9F5F2] border-[#E9DFD8]'} transition-colors`}
         >
           <ArrowLeft size={16} />
           Til baka
@@ -106,7 +112,9 @@ const RecipeDetail = () => {
         {loading ? (
           <LoadingSkeleton />
         ) : recipe ? (
-          <article className={`${darkMode ? 'bg-gray-800/70' : 'bg-white/80'} backdrop-blur-sm rounded-xl shadow-md p-8 space-y-8 transition-colors duration-300`}>
+          <article className={`${darkMode 
+            ? 'bg-gray-800/70 border-gray-700' 
+            : 'bg-white/90 border-[#E9DFD8]'} backdrop-blur-sm rounded-xl shadow-md p-8 space-y-8 transition-colors duration-300 border`}>
             <div className="space-y-4">
               <h1 className={`text-4xl font-bold ${darkMode ? 'text-white' : 'text-gray-800'}`}>
                 {recipe.title}
@@ -120,9 +128,9 @@ const RecipeDetail = () => {
                   <Badge 
                     key={index} 
                     variant={darkMode ? "default" : "outline"} 
-                    className={darkMode ? 
-                      "bg-gray-700 hover:bg-gray-600 text-white" : 
-                      "bg-gray-50 hover:bg-gray-100 text-gray-700 border border-gray-200"
+                    className={darkMode 
+                      ? "bg-gray-700 hover:bg-gray-600 text-white" 
+                      : "bg-[#F9F5F2] hover:bg-[#F3EBE6] text-gray-700 border border-[#E9DFD8]"
                     }
                   >
                     {tag}
@@ -130,7 +138,9 @@ const RecipeDetail = () => {
                 ))}
               </div>
               
-              <div className={`flex justify-between items-center text-sm ${darkMode ? 'text-gray-400 bg-gray-700/50' : 'text-gray-500 bg-gray-50'} mt-6 p-3 rounded-lg transition-colors duration-300`}>
+              <div className={`flex justify-between items-center text-sm ${darkMode 
+                ? 'text-gray-400 bg-gray-700/50 border-gray-600' 
+                : 'text-gray-500 bg-[#F9F5F2] border-[#E9DFD8]'} mt-6 p-3 rounded-lg transition-colors duration-300 border`}>
                 <div className="flex items-center gap-2">
                   <User size={16} className={darkMode ? "text-gray-300" : "text-gray-500"} />
                   <span>{recipe.author}</span>
@@ -142,12 +152,16 @@ const RecipeDetail = () => {
               </div>
             </div>
             
-            <div className={`prose-container ${darkMode ? 'bg-gray-800/50' : 'bg-white'} p-6 rounded-lg`}>
+            <div className={`prose-container ${darkMode 
+              ? 'bg-gray-800/50 border-gray-700' 
+              : 'bg-white/95 border-[#E9DFD8]'} p-6 rounded-lg border`}>
               {renderRteContent(recipe.body)}
             </div>
           </article>
         ) : (
-          <div className={`text-center py-12 ${darkMode ? 'bg-gray-800/70' : 'bg-white'} rounded-xl shadow-md`}>
+          <div className={`text-center py-12 ${darkMode 
+            ? 'bg-gray-800/70 border-gray-700' 
+            : 'bg-white/90 border-[#E9DFD8]'} rounded-xl shadow-md border`}>
             <h2 className="text-2xl font-bold">Uppskriftin fannst ekki</h2>
             <Button onClick={goBack} className="mt-4">
               <ArrowLeft className="mr-2" size={16} />

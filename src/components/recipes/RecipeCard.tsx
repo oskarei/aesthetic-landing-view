@@ -46,7 +46,7 @@ const RecipeCard: React.FC<RecipeCardProps> = ({ recipe }) => {
   };
   
   return (
-    <Card className="overflow-hidden transition-all duration-300 border-none bg-white/80 backdrop-blur-sm shadow-md hover:shadow-lg rounded-xl">
+    <Card className="overflow-hidden transition-all duration-300 border-none bg-white/90 backdrop-blur-sm shadow-md hover:shadow-lg rounded-xl border border-[#E9DFD8]">
       <CardContent className="p-0">
         <div className="p-6 space-y-4">
           {/* Recipe Header */}
@@ -64,7 +64,7 @@ const RecipeCard: React.FC<RecipeCardProps> = ({ recipe }) => {
                 <Badge 
                   key={index} 
                   variant="outline" 
-                  className="bg-gray-50 text-gray-700 hover:bg-gray-100 border border-gray-200 px-2.5 py-1"
+                  className="bg-[#F9F5F2] text-gray-700 hover:bg-[#F3EBE6] border border-[#E9DFD8] px-2.5 py-1"
                 >
                   {tag}
                 </Badge>
@@ -73,7 +73,7 @@ const RecipeCard: React.FC<RecipeCardProps> = ({ recipe }) => {
           </div>
           
           {/* Author and Date */}
-          <div className="flex justify-between items-center text-sm text-gray-500 py-2 border-t border-b border-gray-100">
+          <div className="flex justify-between items-center text-sm text-gray-500 py-2 border-t border-b border-[#E9DFD8]">
             <div className="flex items-center gap-2">
               <User size={16} className="text-gray-400" />
               <span>{recipe.author}</span>
