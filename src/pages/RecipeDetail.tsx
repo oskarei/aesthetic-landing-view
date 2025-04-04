@@ -93,11 +93,11 @@ const RecipeDetail = () => {
         ? 'bg-gray-900/90' 
         : 'bg-white/90'} backdrop-blur border-b ${darkMode ? 'border-gray-700' : 'border-gray-200'} shadow-sm transition-colors duration-300`}>
         <Button 
-          variant="outline" 
+          variant={darkMode ? "ghost" : "outline"}
           onClick={goBack} 
-          className={`flex items-center gap-2 ${darkMode 
-            ? 'hover:bg-gray-800 border-gray-700' 
-            : 'hover:bg-[#F9F5F2] border-[#E9DFD8]'} transition-colors`}
+          className={`flex items-center gap-2 transition-colors ${darkMode 
+            ? 'bg-gray-800/70 hover:bg-gray-700/80 text-gray-200 border-gray-700' 
+            : 'bg-white hover:bg-[#F9F5F2] text-gray-700 border-[#E9DFD8]'}`}
         >
           <ArrowLeft size={16} />
           Til baka
@@ -163,7 +163,12 @@ const RecipeDetail = () => {
             ? 'bg-gray-800/70 border-gray-700' 
             : 'bg-white/90 border-[#E9DFD8]'} rounded-xl shadow-md border`}>
             <h2 className="text-2xl font-bold">Uppskriftin fannst ekki</h2>
-            <Button onClick={goBack} className="mt-4">
+            <Button 
+              onClick={goBack} 
+              className={`mt-4 ${darkMode 
+                ? 'bg-gray-700 text-white hover:bg-gray-600' 
+                : 'bg-white text-gray-700 border-[#E9DFD8] hover:bg-[#F9F5F2]'}`}
+            >
               <ArrowLeft className="mr-2" size={16} />
               Til baka
             </Button>
