@@ -50,7 +50,7 @@ const HamburgerMenu = ({ scrollToGallery, scrollToAbout }: HamburgerMenuProps) =
     setIsOpen(!isOpen);
   };
 
-  const handleNavigation = (action: () => void) => {
+  const handleNavigation = (action: () => void, needsHomeRedirect: string | false = false) => {
     // Apply fade effect by adding a temporary overlay
     const overlay = document.createElement('div');
     overlay.className = 'fixed inset-0 bg-black z-50 animate-fade-in';
@@ -61,7 +61,14 @@ const HamburgerMenu = ({ scrollToGallery, scrollToAbout }: HamburgerMenuProps) =
     
     // Wait for fade-in animation before navigation
     setTimeout(() => {
-      action();
+      if (needsHomeRedirect && location.pathname !== '/') {
+        // If we need to redirect to home first (for gallery and about sections)
+        navigate('/', { state: { scrollTarget: needsHomeRedirect } });
+        // After navigation completes, the home page will handle scrolling based on state
+      } else {
+        // Regular navigation or scrolling if already on home page
+        action();
+      }
       
       // Remove overlay with fade-out animation
       overlay.classList.replace('animate-fade-in', 'animate-fade-out');
@@ -82,8 +89,28 @@ const HamburgerMenu = ({ scrollToGallery, scrollToAbout }: HamburgerMenuProps) =
     navigate('/matur');
   };
 
+  const handleGalleryClick = () => {
+    if (location.pathname === '/') {
+      // If already on home page, just scroll
+      scrollToGallery();
+    } else {
+      // Navigate home with instruction to scroll to gallery
+      handleNavigation(() => {}, 'gallery');
+    }
+  };
+
+  const handleAboutClick = () => {
+    if (location.pathname === '/') {
+      // If already on home page, just scroll
+      scrollToAbout();
+    } else {
+      // Navigate home with instruction to scroll to about
+      handleNavigation(() => {}, 'about');
+    }
+  };
+
   return (
-    <div className="fixed top-5 right-5 z-30">
+    <div className="fixed top-5 right-5 z-40">
       <Button
         variant="ghost"
         size="icon"
@@ -101,7 +128,7 @@ const HamburgerMenu = ({ scrollToGallery, scrollToAbout }: HamburgerMenuProps) =
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: "100%" }}
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            className="fixed top-0 right-0 w-full sm:w-96 h-full bg-white shadow-lg z-50 overflow-y-auto"
+            className="fixed top-0 right-0 w-full sm:w-96 h-screen bg-white shadow-lg z-50 overflow-y-auto"
           >
             <div className="flex justify-end p-5">
               <Button
@@ -124,12 +151,12 @@ const HamburgerMenu = ({ scrollToGallery, scrollToAbout }: HamburgerMenuProps) =
                 />
                 <NavItem 
                   label="Gallery" 
-                  onClick={() => handleNavigation(scrollToGallery)}
+                  onClick={handleGalleryClick}
                   active={false}
                 />
                 <NavItem 
                   label="About" 
-                  onClick={() => handleNavigation(scrollToAbout)}
+                  onClick={handleAboutClick}
                   active={false}
                 />
                 <NavItem 

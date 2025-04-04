@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -115,6 +114,28 @@
     from { opacity: 0.5; }
     to { opacity: 0; }
   }
+  
+  /* Line clamp utilities */
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  .line-clamp-4 {
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
 }
 
 /* Default to Inter font as fallback until Helmet Neue loads */
@@ -138,7 +159,11 @@ body {
   }
   
   .rich-text-content li {
-    @apply relative pl-6 before:absolute before:left-0 before:top-2.5 before:h-2 before:w-2 before:rounded-full before:bg-gray-500 before:content-[''];
+    @apply relative pl-6;
+  }
+  
+  .rich-text-content ul li {
+    @apply before:absolute before:left-0 before:top-2.5 before:h-2 before:w-2 before:rounded-full before:bg-gray-500 before:content-[''];
   }
   
   /* Nested lists styling */
@@ -150,13 +175,29 @@ body {
     @apply before:bg-gray-400 before:h-1.5 before:w-1.5 before:top-3;
   }
 
+  /* Add styling for ordered lists - fixed to avoid double bullets */
+  .rich-text-content ol {
+    @apply list-none pl-6 my-4 space-y-2;
+    counter-reset: item;
+  }
+  
+  .rich-text-content ol > li {
+    @apply relative pl-6;
+    counter-increment: item;
+  }
+  
+  .rich-text-content ol > li::before {
+    content: counter(item) ".";
+    @apply absolute left-0 text-gray-700 font-medium;
+  }
+  
   /* Add styling for the prose class for bullet lists */
   .prose ul {
     @apply list-none pl-6 my-4 space-y-2;
   }
   
   .prose ol {
-    @apply list-decimal pl-6 my-4 space-y-2;
+    @apply list-none pl-6 my-4 space-y-2;
     counter-reset: list-counter;
   }
   
@@ -167,7 +208,7 @@ body {
   
   .prose ol > li::before {
     content: counter(list-counter) ".";
-    @apply absolute left-0 text-gray-500 font-medium;
+    @apply absolute left-0 text-gray-700 font-medium;
   }
   
   .prose ul > li {
@@ -204,5 +245,82 @@ body {
   .prose ul ol,
   .prose ol ul {
     @apply my-1 ml-4;
+  }
+  
+  /* Recipe-specific styling */
+  .prose-container {
+    @apply border border-gray-100 rounded-lg shadow-sm;
+  }
+  
+  .prose-container h2 {
+    @apply text-2xl font-bold text-gray-800 mb-4 pb-2 border-b border-gray-200;
+  }
+  
+  .prose-container h3 {
+    @apply text-xl font-semibold text-gray-700 mb-3;
+  }
+  
+  .prose-container p {
+    @apply mb-4 leading-relaxed text-gray-700;
+  }
+  
+  .prose-container a {
+    @apply text-blue-600 hover:text-blue-800 underline;
+  }
+  
+  .prose-container img {
+    @apply my-4 rounded-lg shadow-md;
+    max-width: 150px !important;
+    height: auto !important;
+  }
+  
+  /* Additional styling for recipe components */
+  .recipe-card-transition {
+    @apply transition-all duration-300 ease-in-out;
+  }
+  
+  .recipe-tag {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800;
+  }
+  
+  .dark .recipe-tag {
+    @apply bg-gray-700 text-gray-200;
+  }
+  
+  /* Improved typography for recipe content */
+  .prose h1 {
+    @apply text-3xl font-bold mb-6 mt-8;
+  }
+  
+  .prose h2 {
+    @apply text-2xl font-bold mb-4 mt-6;
+  }
+  
+  .prose h3 {
+    @apply text-xl font-semibold mb-3 mt-5;
+  }
+  
+  .prose p {
+    @apply leading-relaxed mb-4;
+  }
+  
+  .dark .prose h1,
+  .dark .prose h2,
+  .dark .prose h3,
+  .dark .prose h4,
+  .dark .prose h5,
+  .dark .prose h6 {
+    @apply text-gray-100;
+  }
+  
+  .dark .prose p,
+  .dark .prose li,
+  .dark .prose blockquote {
+    @apply text-gray-300;
+  }
+  
+  /* Recipe content container with improved spacing */
+  .recipe-content {
+    @apply max-w-none space-y-5;
   }
 }

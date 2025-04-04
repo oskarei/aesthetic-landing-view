@@ -12,10 +12,12 @@ import { useLightbox } from "@/hooks/useLightbox";
 import { useScrollSections } from "@/hooks/useScrollSections";
 import { useBackgroundVisibility } from "@/hooks/useBackgroundVisibility";
 import { useImageManager } from "@/hooks/useImageManager";
+import { useLocation } from "react-router-dom";
 
 const MainContent = () => {
   const [isContactOpen, setIsContactOpen] = useState(false);
   const { homeContent, loading } = useHomeContent();
+  const location = useLocation();
   
   // Use our custom hooks
   const { 
@@ -60,6 +62,25 @@ const MainContent = () => {
       document.title = homeContent.title;
     }
   }, [homeContent]);
+
+  // Handle scroll instructions when coming from another page
+  useEffect(() => {
+    if (location.state?.scrollTarget) {
+      console.log("Received scroll instruction:", location.state.scrollTarget);
+      
+      // Small delay to ensure refs are established
+      setTimeout(() => {
+        if (location.state.scrollTarget === 'gallery') {
+          scrollToGallery();
+        } else if (location.state.scrollTarget === 'about') {
+          scrollToAbout();
+        }
+        
+        // Clear the state so it doesn't repeat on further navigation
+        window.history.replaceState({}, document.title);
+      }, 300);
+    }
+  }, [location.state, scrollToGallery, scrollToAbout]);
 
   return (
     <div className="relative z-10 min-h-screen flex flex-col">
