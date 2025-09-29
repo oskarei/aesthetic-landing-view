@@ -18,6 +18,14 @@ const queryClient = new QueryClient();
 const LyticsTracker = () => {
   const location = useLocation();
 
+  // Initialize jstag.optIn() when component mounts
+  useEffect(() => {
+    if (typeof window !== 'undefined' && (window as any).jstag) {
+      (window as any).jstag.optIn();
+    }
+  }, []);
+
+  // Call jstag.optIn() on route changes
   useEffect(() => {
     if (typeof window !== 'undefined' && (window as any).jstag) {
       (window as any).jstag.optIn();

@@ -58,9 +58,6 @@ const RecipesPage = () => {
           <h1 className={`text-3xl font-bold mb-2 text-center ${darkMode ? 'text-white' : 'text-gray-800'}`}>
             Uppskriftir
           </h1>
-          <p className={`text-center ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-            Skoðaðu nýjustu uppskriftirnar okkar
-          </p>
           <div className={`h-1 w-24 ${darkMode 
             ? 'bg-gradient-to-r from-gray-600 to-gray-500' 
             : 'bg-gradient-to-r from-[#E2D1C3] to-[#D9C3B5]'} mx-auto rounded-full mt-4`}></div>
