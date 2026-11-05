@@ -1,4 +1,5 @@
 # Welcome to your Lovable project
+(archived - used to be oskarei.com)
 
 ## Project info
 
